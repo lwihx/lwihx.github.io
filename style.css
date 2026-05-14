@@ -7,10 +7,15 @@
 
 body {
     min-height: 100vh;
-    background: url('https://eo-img.iloli.love/i/pc/') center/cover no-repeat fixed;
+    /* 背景颜色作为 fallback */
     background-color: #e8edf2;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
     font-family: 'Segoe UI', 'Roboto', 'Noto Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
     padding: 2rem 1.5rem;
+    transition: background-image 0.5s ease;
 }
 
 /* 主容器：白色半透明 + 毛玻璃效果 */

@@ -308,10 +308,46 @@
         `).join('');
     }
     
+    // 设置随机背景图片
+async function setRandomBackground() {
+    const apiUrl = 'https://www.loliapi.com/acg/pc/';
+    
+    try {
+        // 方法1：API 直接返回图片，我们可以创建一个 Image 对象来预加载
+        const img = new Image();
+        
+        // 给图片添加时间戳避免缓存
+        const imgUrl = `${apiUrl}?t=${Date.now()}`;
+        
+        img.onload = function() {
+            document.body.style.backgroundImage = `url('${imgUrl}')`;
+            document.body.style.backgroundSize = 'cover';
+            document.body.style.backgroundPosition = 'center';
+            document.body.style.backgroundRepeat = 'no-repeat';
+            document.body.style.backgroundAttachment = 'fixed';
+        };
+        
+        img.onerror = function() {
+            console.warn('背景图片加载失败，使用备用背景');
+            document.body.style.backgroundColor = '#e8edf2';
+        };
+        
+        img.src = imgUrl;
+        
+    } catch (err) {
+        console.error('设置背景图片失败:', err);
+        document.body.style.backgroundColor = '#e8edf2';
+    }
+}
+    
     // 初始化
     async function init() {
-        switchTab('home');
+		// 先设置背景图片
+		setRandomBackground();
+		switchTab('home');
         await loadArchiveMarkdown();
+        loadProgramHardcoded();
+        loadWebsitesHardcoded();
         await loadProgramFiles();
         await loadWebsiteList();
         const container = document.querySelector('.app-container');
