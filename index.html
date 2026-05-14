@@ -3,89 +3,640 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>LWIHX · 个人站点</title>
-    <link rel="stylesheet" href="./style.css">
-    <link rel="icon" type="image/png" href="./icon.png">
-    <link rel="preload" as="image" href="./avatar.png">
-    <!-- 引入 marked.js 用于解析 Markdown -->
+    <title>LWIHX的小站</title>
+    <!-- 引入 marked.js 解析 Markdown -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            /* 背景图片调用 */
+            background: url('https://eo-img.iloli.love/i/pc/') center/cover no-repeat fixed;
+            background-color: #e8edf2;
+            font-family: 'Segoe UI', 'Roboto', 'Noto Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+            padding: 2rem 1.5rem;
+        }
+
+        /* 主容器：白色半透明 + 毛玻璃效果 */
+        .app-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(12px);
+            border-radius: 2rem;
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.4);
+            padding: 1.8rem 2rem;
+            transition: all 0.3s ease;
+        }
+
+        /* 淡入淡出效果 */
+        .fade-in {
+            animation: fadeInUp 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 头部区域 */
+        .site-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding-bottom: 1.2rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.2rem;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .avatar-img {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: rgba(255,255,255,0.5);
+            border: 2px solid rgba(255,255,255,0.8);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .site-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #1e2f3e;
+            text-shadow: 0 1px 0 rgba(255,255,255,0.5);
+        }
+
+        .github-link {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(4px);
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            color: #1e2f3e;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s;
+            border: 1px solid rgba(255,255,255,0.8);
+        }
+
+        .github-link:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: scale(1.02);
+        }
+
+        /* 导航栏：半透黑灰色（按需求首页|程序|网站使用黑灰色） */
+        .main-nav {
+            display: flex;
+            gap: 0.5rem;
+            background: rgba(30, 30, 35, 0.55);
+            backdrop-filter: blur(8px);
+            border-radius: 60px;
+            padding: 0.4rem;
+            margin-bottom: 2rem;
+            width: fit-content;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            padding: 0.6rem 1.8rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #eef2f5;
+            background-color: rgba(35, 35, 45, 0.6);
+            backdrop-filter: blur(4px);
+        }
+
+        .nav-btn.active {
+            background: #2c2f38;
+            color: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .nav-btn:not(.active):hover {
+            background: rgba(55, 60, 75, 0.8);
+            color: #ffffff;
+        }
+
+        /* 面板切换 */
+        .tab-panel {
+            display: none;
+            animation: fadePanel 0.3s ease;
+        }
+
+        .tab-panel.active-panel {
+            display: block;
+        }
+
+        @keyframes fadePanel {
+            from { opacity: 0; transform: translateY(5px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        /* 首页布局：左侧个人信息，右侧 Archive */
+        .home-layout {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .home-left {
+            flex: 1;
+            min-width: 240px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(4px);
+            border-radius: 1.5rem;
+            padding: 1.8rem 1.5rem;
+            border: 1px solid rgba(255,255,255,0.6);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .home-profile {
+            text-align: center;
+        }
+
+        .home-avatar {
+            width: 112px;
+            height: 112px;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.1);
+            object-fit: cover;
+            margin-bottom: 1rem;
+        }
+
+        .home-name {
+            font-size: 1.8rem;
+            color: #1e2f3e;
+            margin-bottom: 0.4rem;
+        }
+
+        .home-github-mobile a {
+            color: #4a627a;
+            text-decoration: none;
+            font-size: 0.95rem;
+        }
+
+        .home-right {
+            flex: 2;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(4px);
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            border: 1px solid rgba(255,255,255,0.6);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Archive 卡片样式 */
+        .archive-card {
+            width: 100%;
+        }
+
+        .archive-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            border-bottom: 2px solid rgba(0,0,0,0.1);
+            padding-bottom: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .archive-header span:first-child {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #2c3e4e;
+        }
+
+        .archive-sub {
+            font-size: 0.8rem;
+            color: #6c7a89;
+        }
+
+        .archive-content {
+            color: #2c3e50;
+            line-height: 1.7;
+            font-size: 0.95rem;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            white-space: normal;
+        }
+
+        /* Markdown 渲染样式 */
+        .archive-content h1 {
+            font-size: 1.6rem;
+            margin: 0.8rem 0 0.4rem;
+            border-left: 4px solid #86b7fe;
+            padding-left: 12px;
+        }
+        .archive-content h2 {
+            font-size: 1.3rem;
+            margin: 0.6rem 0 0.3rem;
+            color: #2c5282;
+        }
+        .archive-content h3 {
+            font-size: 1.1rem;
+            margin: 0.5rem 0;
+        }
+        .archive-content p {
+            margin: 0.6rem 0;
+        }
+        .archive-content ul, .archive-content ol {
+            padding-left: 1.8rem;
+            margin: 0.5rem 0;
+        }
+        .archive-content li {
+            margin: 0.2rem 0;
+        }
+        .archive-content code {
+            background: rgba(0,0,0,0.08);
+            padding: 0.2rem 0.4rem;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.85rem;
+        }
+        .archive-content pre {
+            background: rgba(0,0,0,0.05);
+            padding: 0.8rem;
+            border-radius: 12px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .archive-content a {
+            color: #3b82f6;
+            text-decoration: none;
+        }
+        .archive-content a:hover {
+            text-decoration: underline;
+        }
+
+        /* 底部 LoliAPI 居中 */
+        .home-footer {
+            margin-top: 2rem;
+            text-align: center;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .loli-api-link {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(8px);
+            color: #1f3a4b;
+            text-decoration: none;
+            padding: 0.5rem 1.8rem;
+            border-radius: 40px;
+            font-weight: bold;
+            transition: 0.2s;
+            border: 1px solid rgba(255,255,255,0.8);
+        }
+
+        .loli-api-link:hover {
+            background: rgba(255, 255, 255, 0.9);
+            transform: scale(1.02);
+        }
+
+        /* 程序 & 网站共用样式 */
+        .panel-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .panel-header h2 {
+            color: #1e2f3e;
+            font-size: 1.8rem;
+            text-shadow: 0 1px 0 rgba(255,255,255,0.3);
+        }
+
+        .path-hint {
+            color: #4a5568;
+            font-size: 0.85rem;
+            margin-top: 4px;
+        }
+
+        .file-list-container, .website-list-container {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(4px);
+            border-radius: 1.2rem;
+            padding: 0.5rem;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        /* 文件列表样式 (三列布局) */
+        .file-list-header {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.8rem 1.2rem;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            font-weight: 700;
+            color: #1e2f3e;
+            background: rgba(250,250,250,0.5);
+            border-radius: 1rem 1rem 0 0;
+        }
+
+        .file-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.9rem 1.2rem;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+            transition: background 0.15s;
+        }
+
+        .file-row:hover {
+            background: rgba(255,255,255,0.6);
+        }
+
+        .file-name {
+            flex: 2;
+            font-weight: 500;
+            color: #1f3a4b;
+        }
+
+        .file-name a {
+            text-decoration: none;
+            color: #2c5282;
+            font-weight: 500;
+            border-bottom: 1px dashed #86b7fe;
+        }
+
+        .file-name a:hover {
+            color: #1e3a5f;
+            border-bottom-style: solid;
+        }
+
+        .file-date {
+            flex: 1;
+            text-align: center;
+            color: #5a6e7c;
+            font-size: 0.85rem;
+        }
+
+        .file-size {
+            flex: 0.8;
+            text-align: right;
+            color: #5a6e7c;
+            font-size: 0.85rem;
+        }
+
+        /* 网站列表样式 */
+        .website-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.9rem 1.2rem;
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+        }
+
+        .website-name a {
+            text-decoration: none;
+            color: #2c5282;
+            font-weight: 500;
+        }
+
+        .website-name a:hover {
+            text-decoration: underline;
+        }
+
+        .website-desc {
+            color: #6c7a89;
+            font-size: 0.85rem;
+        }
+
+        .loading-placeholder, .error-message {
+            text-align: center;
+            padding: 2rem;
+            color: #4b5563;
+        }
+
+        .error-message {
+            color: #b91c1c;
+        }
+
+        hr {
+            margin: 0.3rem 0;
+            border-color: rgba(0,0,0,0.05);
+        }
+
+        @media (max-width: 750px) {
+            body { padding: 1rem; }
+            .app-container { padding: 1rem; }
+            .home-layout { flex-direction: column; }
+            .file-row, .file-list-header { flex-wrap: wrap; gap: 6px; }
+            .file-date, .file-size { text-align: left; }
+        }
+    </style>
 </head>
 <body>
 
-    <div class="app-container fade-in">
-        <header class="site-header">
-            <div class="header-left">
-                <img src="./avatar.png" alt="avatar" class="avatar-img" onerror="this.src='https://via.placeholder.com/48?text=Avatar'">
-                <span class="site-title">LWIHX</span>
-            </div>
-            <div class="header-right">
-                <a href="https://github.com/lwihx" target="_blank" rel="noopener noreferrer" class="github-link">Github</a>
-            </div>
-        </header>
+<div class="app-container fade-in">
+    <header class="site-header">
+        <div class="header-left">
+            <img src="./avatar.png" alt="avatar" class="avatar-img" onerror="this.src='https://via.placeholder.com/48?text=Avatar'">
+            <span class="site-title">LWIHX</span>
+        </div>
+        <div class="header-right">
+            <a href="https://github.com/lwihx" target="_blank" rel="noopener noreferrer" class="github-link">Github</a>
+        </div>
+    </header>
 
-        <nav class="main-nav">
-            <button class="nav-btn active" data-tab="home">首页</button>
-            <button class="nav-btn" data-tab="program">程序</button>
-            <button class="nav-btn" data-tab="website">网站</button>
-        </nav>
+    <nav class="main-nav">
+        <button class="nav-btn active" data-tab="home">首页</button>
+        <button class="nav-btn" data-tab="program">程序</button>
+        <button class="nav-btn" data-tab="website">网站</button>
+    </nav>
 
-        <main class="tab-content-wrapper">
-            <!-- 首页面板：左侧头像+信息，右侧Archive -->
-            <div id="homePanel" class="tab-panel active-panel">
-                <div class="home-layout">
-                    <!-- 左侧：个人信息 -->
-                    <div class="home-left">
-                        <div class="home-profile">
-                            <img src="./avatar.png" alt="avatar-large" class="home-avatar" onerror="this.src='https://via.placeholder.com/96?text=Avatar'">
-                            <h2 class="home-name">LWIHX</h2>
-                            <div class="home-github-mobile">
-                                <a href="https://github.com/lwihx" target="_blank" rel="noopener noreferrer">@lwihx on GitHub</a>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- 右侧：Archive 内容区域（直接读取 Archive.md） -->
-                    <div class="home-right">
-                        <div class="archive-card">
-                            <div class="archive-header">
-                                <span>📁 Archive</span>
-                                <span class="archive-sub">Markdown 内容</span>
-                            </div>
-                            <div class="archive-content" id="archiveContent">
-                                <div class="loading-placeholder">正在加载 Archive.md ...</div>
-                            </div>
+    <main class="tab-content-wrapper">
+        <div id="homePanel" class="tab-panel active-panel">
+            <div class="home-layout">
+                <div class="home-left">
+                    <div class="home-profile">
+                        <img src="./avatar.png" alt="avatar-large" class="home-avatar" onerror="this.src='https://via.placeholder.com/96?text=Avatar'">
+                        <h2 class="home-name">LWIHX</h2>
+                        <div class="home-github-mobile">
+                            <a href="https://github.com/lwihx" target="_blank" rel="noopener noreferrer">GitHub@lwihx</a>
                         </div>
                     </div>
                 </div>
-                <!-- 底部 LoliAPI 链接 -->
-                <div class="home-footer">
-                    <a href="https://www.loliapi.com/" target="_blank" rel="noopener noreferrer" class="loli-api-link">LoliAPI</a>
+                <div class="home-right">
+                    <div class="archive-card">
+                        <div class="archive-header">
+                            <span>Archive</span>
+                            <span class="archive-sub">内容</span>
+                        </div>
+                        <div class="archive-content" id="archiveContent">
+                            <div class="loading-placeholder">正在加载 Archive ...</div>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <!-- 程序面板：硬编码文件列表，支持下载 -->
-            <div id="programPanel" class="tab-panel">
-                <div class="panel-header">
-                    <h2>📦 Application</h2>
-                    <p class="path-hint">点击文件名即可下载对应文件</p>
-                </div>
-                <div class="file-list-container" id="programFileList">
-                    <!-- 硬编码文件列表会由js动态生成，便于维护 -->
-                </div>
+            <div class="home-footer">
+                <a href="https://www.loliapi.com/" target="_blank" rel="noopener noreferrer" class="loli-api-link">LoliAPI</a>
             </div>
+        </div>
 
-            <!-- 网站面板 -->
-            <div id="websitePanel" class="tab-panel">
-                <div class="panel-header">
-                    <h2>🌐 Website</h2>
-                    <p class="path-hint">收藏或展示的网站链接</p>
-                </div>
-                <div class="website-list-container" id="websiteList">
-                    <div class="loading-placeholder">加载网站列表中...</div>
-                </div>
+        <div id="programPanel" class="tab-panel">
+            <div class="panel-header">
+                <h2>Application</h2>
+                <p class="path-hint">点击文件名即可下载</p>
             </div>
-        </main>
-    </div>
+            <div class="file-list-container" id="programFileList">
+            </div>
+        </div>
 
-    <script src="./index.js"></script>
+        <div id="websitePanel" class="tab-panel">
+            <div class="panel-header">
+                <h2>Website</h2>
+                <p class="path-hint">推荐网站</p>
+            </div>
+            <div class="website-list-container" id="websiteList">
+          
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    (function() {
+        // 标签页切换逻辑
+        const navBtns = document.querySelectorAll('.nav-btn');
+        const panels = {
+            home: document.getElementById('homePanel'),
+            program: document.getElementById('programPanel'),
+            website: document.getElementById('websitePanel')
+        };
+
+        function switchTab(tabId) {
+            navBtns.forEach(btn => {
+                const btnTab = btn.getAttribute('data-tab');
+                if (btnTab === tabId) btn.classList.add('active');
+                else btn.classList.remove('active');
+            });
+            Object.keys(panels).forEach(key => {
+                if (panels[key]) {
+                    if (key === tabId) panels[key].classList.add('active-panel');
+                    else panels[key].classList.remove('active-panel');
+                }
+            });
+        }
+
+        navBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tab = btn.getAttribute('data-tab');
+                if (tab === 'home') switchTab('home');
+                else if (tab === 'program') switchTab('program');
+                else if (tab === 'website') switchTab('website');
+            });
+        });
+
+        // Archive.md 使用 marked.js
+        async function loadArchiveMarkdown() {
+            const archiveContainer = document.getElementById('archiveContent');
+            if (!archiveContainer) return;
+            const mdUrl = '/Archive/Archive.md';
+            try {
+                const response = await fetch(mdUrl);
+                if (!response.ok) throw new Error(`HTTP ${response.status} - 文件不存在`);
+                const markdownText = await response.text();
+                if (typeof marked !== 'undefined') {
+                    // 使用 marked 解析
+                    const htmlContent = marked.parse(markdownText);
+                    archiveContainer.innerHTML = htmlContent;
+                } else {
+                    archiveContainer.innerHTML = `<pre style="white-space: pre-wrap;">${escapeHtml(markdownText)}</pre>`;
+                }
+            } catch (err) {
+                console.warn(err);
+                archiveContainer.innerHTML = `<div class="error-message">❌ 无法加载 Archive.md，请确保根目录下有 Archive/Archive.md 文件<br>错误: ${err.message}</div>`;
+            }
+        }
+
+        function escapeHtml(str) {
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+
+        function loadProgramHardcoded() {
+            const container = document.getElementById('programFileList');
+            if (!container) return;
+            const files = [
+                { name: 'JiYuTrainer', displayName: 'JiYuTrainer', date: '2026-5-14', size: '4M', downloadUrl: 'https://lwihx.github.io/files/JiYuTrainer-1.7.16.zip' },
+            ];
+            
+            const headerHtml = `<div class="file-list-header">
+                <span>文件名</span>
+                <span>日期</span>
+                <span>大小</span>
+            </div>`;
+            
+            const rowsHtml = files.map(file => `
+                <div class="file-row">
+                    <span class="file-name"><a href="${file.downloadUrl}" target="_blank" download>📄 ${escapeHtml(file.displayName)}</a></span>
+                    <span class="file-date">${escapeHtml(file.date)}</span>
+                    <span class="file-size">${escapeHtml(file.size)}</span>
+                </div>
+            `).join('');
+            
+            container.innerHTML = headerHtml + rowsHtml + `<div style="padding:0.75rem; text-align:center; font-size:0.7rem; opacity:0.7;">—— 点击文件名可直接下载 ——</div>`;
+        }
+        
+        function loadWebsitesHardcoded() {
+            const container = document.getElementById('websiteList');
+            if (!container) return;
+            const websites = [
+                { name: 'LoliAPI', url: 'https://www.loliapi.com/', desc: 'LoliAPI' },
+                { name: 'GitHub', url: 'https://github.com/lwihx', desc: 'GitHub@LWIHX' },
+            ];
+            
+            const rowsHtml = websites.map(site => `
+                <div class="website-row">
+                    <span class="website-name">🌐 <a href="${escapeHtml(site.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(site.name)}</a></span>
+                    <span class="website-desc">${escapeHtml(site.desc)}</span>
+                </div>
+            `).join('');
+            container.innerHTML = rowsHtml || '<div class="loading-placeholder">暂无站点</div>';
+        }
+        
+        // 初始化所有模块
+        async function init() {
+            switchTab('home');
+            await loadArchiveMarkdown();   // 加载右侧 Archive.md
+            loadProgramHardcoded();        // 程序硬编码列表（带下载）
+            loadWebsitesHardcoded();       // 网站硬编码列表
+            // 淡入淡出效果保持
+            const containerDiv = document.querySelector('.app-container');
+            if (containerDiv) containerDiv.classList.add('fade-in');
+        }
+        
+        init();
+    })();
+</script>
 </body>
 </html>
