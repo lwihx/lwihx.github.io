@@ -1,11 +1,92 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-    <meta http-equiv="refresh" content="0; url=https://192.168.101.6:9010" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>LWIHX · 个人站点</title>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="icon" type="image/png" href="./icon.png">
+    <link rel="preload" as="image" href="./avatar.png">
 </head>
 <body>
-    <p>...<a href="http://192.168.101.6:9010">...</a></p>
+
+    <div class="app-container fade-in">
+        <header class="site-header">
+            <div class="header-left">
+                <img src="./avatar.png" alt="avatar" class="avatar-img" onerror="this.src='https://via.placeholder.com/48?text=Avatar'">
+                <span class="site-title">LWIHX</span>
+            </div>
+            <div class="header-right">
+                <a href="https://github.com/lwihx" target="_blank" rel="noopener noreferrer" class="github-link">Github</a>
+            </div>
+        </header>
+
+        <nav class="main-nav">
+            <button class="nav-btn active" data-tab="home">首页</button>
+            <button class="nav-btn" data-tab="program">程序</button>
+            <button class="nav-btn" data-tab="website">网站</button>
+        </nav>
+
+        <main class="tab-content-wrapper">
+            <!-- 首页面板 -->
+            <div id="homePanel" class="tab-panel active-panel">
+                <div class="home-layout">
+                    <div class="home-left">
+                        <div class="home-profile">
+                            <img src="./avatar.png" alt="avatar-large" class="home-avatar" onerror="this.src='https://via.placeholder.com/96?text=Avatar'">
+                            <h2 class="home-name">LWIHX</h2>
+                            <div class="home-github-mobile">
+                                <a href="https://github.com/lwihx" target="_blank" rel="noopener noreferrer">@lwihx on GitHub</a>
+                            </div>
+                        </div>
+                        <div class="archive-box">
+                            <div class="archive-header">
+                                <span>📁 Archive</span>
+                                <span class="archive-sub">常用代码</span>
+                            </div>
+                            <div class="archive-content" id="archiveContent">
+                                <div class="archive-loading">载入中...</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="home-right">
+                        <div class="info-card">
+                            <h3>📄 常用代码片段</h3>
+                            <div id="codeSnippets" class="snippets-list">
+                                <!-- 动态填充 -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="home-footer">
+                    <a href="https://www.loliapi.com/" target="_blank" rel="noopener noreferrer" class="loli-api-link">LoliAPI</a>
+                </div>
+            </div>
+
+            <!-- 程序面板 -->
+            <div id="programPanel" class="tab-panel">
+                <div class="panel-header">
+                    <h2>📦 Application</h2>
+                    <p class="path-hint">项目根目录 /files/ 下的文件列表</p>
+                </div>
+                <div class="file-list-container" id="programFileList">
+                    <div class="loading-placeholder">加载文件列表中...</div>
+                </div>
+            </div>
+
+            <!-- 网站面板 -->
+            <div id="websitePanel" class="tab-panel">
+                <div class="panel-header">
+                    <h2>🌐 Website</h2>
+                    <p class="path-hint">收藏或展示的网站链接</p>
+                </div>
+                <div class="website-list-container" id="websiteList">
+                    <div class="loading-placeholder">加载网站列表中...</div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="./index.js"></script>
 </body>
 </html>
-
-
