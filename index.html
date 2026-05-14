@@ -60,25 +60,49 @@
                 </div>
             </div>
 
-            <!-- 程序面板：读取 files 文件夹，支持下载 -->
+            <!-- 程序面板：硬编码文件列表，支持下载 -->
             <div id="programPanel" class="tab-panel">
                 <div class="panel-header">
                     <h2>📦 Application</h2>
-                    <p class="path-hint">项目根目录 /files/ 下的文件列表（点击文件名即可下载）</p>
+                    <p class="path-hint">点击文件名即可下载对应程序</p>
                 </div>
                 <div class="file-list-container" id="programFileList">
-                    <div class="loading-placeholder">正在扫描文件列表...</div>
+                    <div class="file-list-header">
+                        <span>文件名称</span>
+                        <span>日期</span>
+                        <span>大小</span>
+                    </div>
+                    <div class="file-row">
+                        <span class="file-name download-link" data-url="https://lwihx.github.io/files/JiYuTrainer-1.7.16.zip">📄 JiYuTrainer-1.7.16.zip</span>
+                        <span class="file-date">2026-5-14</span>
+                        <span class="file-size">4 MB</span>
+                    </div>
                 </div>
             </div>
 
-            <!-- 网站面板 -->
+            <!-- 网站面板：硬编码网站列表 -->
             <div id="websitePanel" class="tab-panel">
                 <div class="panel-header">
                     <h2>🌐 Website</h2>
                     <p class="path-hint">收藏或展示的网站链接</p>
                 </div>
                 <div class="website-list-container" id="websiteList">
-                    <div class="loading-placeholder">加载网站列表中...</div>
+                    <div class="website-row">
+                        <span class="website-name">🌐 <a href="https://www.loliapi.com/" target="_blank" rel="noopener" class="website-link">LoliAPI - 随机图片/API</a></span>
+                        <span class="website-status">二次元与实用API</span>
+                    </div>
+                    <div class="website-row">
+                        <span class="website-name">🌐 <a href="https://github.com/lwihx" target="_blank" rel="noopener" class="website-link">GitHub - LWIHX</a></span>
+                        <span class="website-status">开源代码仓库</span>
+                    </div>
+                    <div class="website-row">
+                        <span class="website-name">🌐 <a href="https://eo-img.iloli.love/i/pc/" target="_blank" rel="noopener" class="website-link">背景图源</a></span>
+                        <span class="website-status">高清壁纸资源</span>
+                    </div>
+                    <div class="website-row">
+                        <span class="website-name">🌐 <a href="https://developer.mozilla.org/zh-CN/" target="_blank" rel="noopener" class="website-link">MDN Web Docs</a></span>
+                        <span class="website-status">前端技术文档</span>
+                    </div>
                 </div>
             </div>
         </main>
