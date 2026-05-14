@@ -630,9 +630,11 @@
             container.innerHTML = rowsHtml || '<div class="loading-placeholder">暂无站点</div>';
         }
         
-        // 设置随机背景图片
+     // 设置随机背景图片
 function setRandomBackground() {
+    // API 地址
     const imgUrl = `https://www.loliapi.com/acg/pc/?t=${Date.now()}`;
+    
     const img = new Image();
     img.onload = function() {
         document.body.style.backgroundImage = `url('${imgUrl}')`;
@@ -642,8 +644,14 @@ function setRandomBackground() {
         document.body.style.backgroundAttachment = 'fixed';
     };
     img.onerror = function() {
-        document.body.style.backgroundColor = '#e8edf2';
-        document.body.style.backgroundImage = "url('https://eo-img.iloli.love/i/pc/')";
+        console.warn('背景图片加载失败，使用备用图片源');
+        // 备用方案
+        const fallbackUrl = `https://eo-img.iloli.love/i/pc/?t=${Date.now()}`;
+        document.body.style.backgroundImage = `url('${fallbackUrl}')`;
+        document.body.style.backgroundSize = 'cover';
+        document.body.style.backgroundPosition = 'center';
+        document.body.style.backgroundRepeat = 'no-repeat';
+        document.body.style.backgroundAttachment = 'fixed';
     };
     img.src = imgUrl;
 }
