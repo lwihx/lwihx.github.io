@@ -1,7 +1,5 @@
-// index.js - 标签页切换，动态加载文件列表/网站数据，并解析Archive.md
-
+// index.js - 直接读取 Archive.md 和 files 文件夹，无硬编码内容
 (function() {
-    // ---------- DOM 元素 ----------
     const navBtns = document.querySelectorAll('.nav-btn');
     const panels = {
         home: document.getElementById('homePanel'),
@@ -9,12 +7,8 @@
         website: document.getElementById('websitePanel')
     };
 
-    // 当前激活的标签
-    let currentTab = 'home';
-
-    // ---------- 辅助函数：切换标签页 ----------
+    // 切换标签页
     function switchTab(tabId) {
-        // 更新按钮样式
         navBtns.forEach(btn => {
             const btnTab = btn.getAttribute('data-tab');
             if (btnTab === tabId) {
@@ -23,7 +17,6 @@
                 btn.classList.remove('active');
             }
         });
-        // 显示对应面板
         Object.keys(panels).forEach(key => {
             if (panels[key]) {
                 if (key === tabId) {
@@ -33,10 +26,8 @@
                 }
             }
         });
-        currentTab = tabId;
     }
 
-    // 绑定导航事件
     navBtns.forEach(btn => {
         btn.addEventListener('click', (e) => {
             const tab = btn.getAttribute('data-tab');
@@ -46,87 +37,9 @@
         });
     });
 
-    // ---------- 首页功能：加载 Archive.md 并解析常用代码 ----------
-    async function loadArchiveMarkdown() {
-        const archiveContentDiv = document.getElementById('archiveContent');
-        const snippetsContainer = document.getElementById('codeSnippets');
-        // 默认路径 Archive.md 在项目根目录 Archive文件夹下 (根据规范: 根目录/Archive/Archive.md)
-        const archiveUrl = './Archive/Archive.md';
-        
-        // 同时提供回退内容
-        const fallbackText = `# 常用HTML代码，及图片\n- 通过 \`<link rel="stylesheet" href="./style.css">\` 引入样式文件\n- 通过 \`<script src="./index.js"></script>\` 引入脚本文件`;
-        
-        try {
-            const response = await fetch(archiveUrl);
-            if (!response.ok) throw new Error('Archive.md not found');
-            let markdownText = await response.text();
-            if (!markdownText.trim()) markdownText = fallbackText;
-            
-            // 解析markdown风格: 显示原始内容到archive区块，并且提取代码示例到右侧
-            // 显示原始格式（保留简单样式）
-            const formattedArchive = formatArchiveContent(markdownText);
-            archiveContentDiv.innerHTML = formattedArchive || `<pre>${escapeHtml(markdownText)}</pre>`;
-            
-            // 提取常用代码片段 (匹配 - 通过 `xxx` 或 反引号包裹的内容)
-            const snippets = extractCodeSnippets(markdownText);
-            if (snippets.length > 0) {
-                snippetsContainer.innerHTML = snippets.map(s => `
-                    <div class="snippet-item">
-                        <div class="snippet-code">${escapeHtml(s.code)}</div>
-                        <div class="snippet-desc">${escapeHtml(s.desc || '用法提示')}</div>
-                    </div>
-                `).join('');
-            } else {
-                // 默认展示两条关键的示例片段
-                snippetsContainer.innerHTML = `
-                    <div class="snippet-item"><div class="snippet-code">&lt;link rel="stylesheet" href="./style.css"&gt;</div><div class="snippet-desc">引入外部样式表</div></div>
-                    <div class="snippet-item"><div class="snippet-code">&lt;script src="./index.js"&gt;&lt;/script&gt;</div><div class="snippet-desc">引入JavaScript文件</div></div>
-                    <div class="snippet-item"><div class="snippet-code">&lt;img src="./avatar.png" alt="avatar"&gt;</div><div class="snippet-desc">头像图片示例</div></div>
-                `;
-            }
-        } catch (err) {
-            console.warn('加载Archive.md失败，使用内建内容', err);
-            archiveContentDiv.innerHTML = `<div class="error-message">⚠️ 未找到 Archive/Archive.md，展示默认帮助</div><pre>${escapeHtml(fallbackText)}</pre>`;
-            snippetsContainer.innerHTML = `
-                <div class="snippet-item"><div class="snippet-code">&lt;link rel="stylesheet" href="./style.css"&gt;</div><div class="snippet-desc">引用样式表 (通用)</div></div>
-                <div class="snippet-item"><div class="snippet-code">&lt;script src="./index.js"&gt;&lt;/script&gt;</div><div class="snippet-desc">引用脚本文件 (通用)</div></div>
-            `;
-        }
-    }
-    
-    // 简单格式化archive内容保留换行与代码块风格
-    function formatArchiveContent(md) {
-        // 简单的markdown转义展示，支持换行和代码块标记
-        let html = md.replace(/```(\w*)\n([\s\S]*?)```/g, (_, lang, code) => {
-            return `<pre class="code-block"><code>${escapeHtml(code)}</code></pre>`;
-        });
-        html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
-        html = html.replace(/^- (.*)$/gm, '<li>• $1</li>');
-        html = html.replace(/^# (.*)$/gm, '<h4 style="margin:8px 0 4px;color:#ffdd99;">$1</h4>');
-        html = html.replace(/\n/g, '<br>');
-        return `<div style="font-size:0.9rem;">${html}</div>`;
-    }
-    
-    function extractCodeSnippets(mdText) {
-        const snippets = [];
-        // 匹配形如 - 通过 `xxx` 引入样式文件
-        const lines = mdText.split(/\r?\n/);
-        for (let line of lines) {
-            let match = line.match(/-\s*通过\s*`([^`]+)`\s*(.*)/);
-            if (match) {
-                snippets.push({ code: match[1], desc: match[2] || '代码示例' });
-            } else {
-                // 匹配 - 任意 `代码` 描述
-                let genericMatch = line.match(/-\s*`([^`]+)`\s*(.*)/);
-                if (genericMatch) {
-                    snippets.push({ code: genericMatch[1], desc: genericMatch[2] || '常用引用' });
-                }
-            }
-        }
-        return snippets;
-    }
-    
+    // 转义 HTML
     function escapeHtml(str) {
+        if (!str) return '';
         return str.replace(/[&<>]/g, function(m) {
             if (m === '&') return '&amp;';
             if (m === '<') return '&lt;';
@@ -136,77 +49,258 @@
             return c;
         });
     }
+
+    // ========== 首页：直接读取 Archive.md ==========
+    async function loadArchiveMarkdown() {
+        const archiveContentDiv = document.getElementById('archiveContent');
+        const snippetsContainer = document.getElementById('codeSnippets');
+        const archiveUrl = './Archive/Archive.md';
+        
+        try {
+            const response = await fetch(archiveUrl);
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: 未找到 Archive.md 文件`);
+            }
+            const markdownText = await response.text();
+            
+            // 显示原始 Markdown 内容（带格式）
+            const formattedArchive = formatMarkdownToHtml(markdownText);
+            archiveContentDiv.innerHTML = formattedArchive || `<pre style="white-space:pre-wrap;word-break:break-all;">${escapeHtml(markdownText)}</pre>`;
+            
+            // 提取代码片段
+            const snippets = extractCodeSnippets(markdownText);
+            if (snippets.length > 0) {
+                snippetsContainer.innerHTML = snippets.map(s => `
+                    <div class="snippet-item">
+                        <div class="snippet-code">${escapeHtml(s.code)}</div>
+                        <div class="snippet-desc">${escapeHtml(s.desc || '代码示例')}</div>
+                    </div>
+                `).join('');
+            } else {
+                snippetsContainer.innerHTML = '<div class="error-message">未找到代码片段，请在 Archive.md 中添加类似 "- 通过 `code` 描述" 的内容</div>';
+            }
+        } catch (err) {
+            console.error('加载 Archive.md 失败:', err);
+            archiveContentDiv.innerHTML = `<div class="error-message">❌ 无法加载 Archive.md 文件<br>请确保根目录下有 Archive/Archive.md 文件<br>错误: ${escapeHtml(err.message)}</div>`;
+            snippetsContainer.innerHTML = '<div class="error-message">无法提取代码片段，请检查 Archive.md 文件是否存在</div>';
+        }
+    }
     
-    // ---------- 程序面板：读取 files 文件夹下文件列表（模拟动态获取）----------
-    // 根据设计: 项目根目录的 files 文件夹下，展示文件1,文件2, 并显示日期大小.
-    // 由于前端无法直接枚举本地文件夹，故提供预定义文件列表 (同时可以fetch API探测，但更稳健使用约定列表)
-    // 但为了让实际扩展，可以通过 fetch 请求 files/ 下json清单? 没有API可以列举，所以采用模拟真实存在的配置或发请求尝试HEAD？
-    // 这里为了满足用户展示效果，同时保持半真实，提供一个动态获取的思路：发送请求列举files文件夹内资源(若有后端支持不可行)，但可用静态文件清单。
-    // 按照设计会展示文件列表，我提供一个mock列表，并且额外提示可以动态添加。
-    // 同时强调真实场景可替换为后端API。为了展示一致性，展示代表性列表并包含日期大小。
+    // 简单的 Markdown 转 HTML（支持换行、代码块、列表）
+    function formatMarkdownToHtml(md) {
+        if (!md) return '';
+        let html = md;
+        
+        // 处理代码块 ```code```
+        html = html.replace(/```(\w*)\n([\s\S]*?)```/g, (_, lang, code) => {
+            return `<pre class="code-block" style="background:rgba(0,0,0,0.05);padding:0.75rem;border-radius:8px;overflow-x:auto;"><code>${escapeHtml(code)}</code></pre>`;
+        });
+        
+        // 处理行内代码 `code`
+        html = html.replace(/`([^`]+)`/g, '<code style="background:rgba(0,0,0,0.05);padding:2px 6px;border-radius:6px;">$1</code>');
+        
+        // 处理标题 # 
+        html = html.replace(/^### (.*)$/gm, '<h5 style="margin:12px 0 6px;color:#2c3e50;">$1</h5>');
+        html = html.replace(/^## (.*)$/gm, '<h4 style="margin:12px 0 8px;color:#2c3e50;font-weight:600;">$1</h4>');
+        html = html.replace(/^# (.*)$/gm, '<h3 style="margin:16px 0 10px;color:#1e2a3a;font-weight:700;">$1</h3>');
+        
+        // 处理无序列表 - 或 *
+        html = html.replace(/^- (.*)$/gm, '<li style="margin-left:1.5rem;margin-bottom:4px;">• $1</li>');
+        html = html.replace(/^\* (.*)$/gm, '<li style="margin-left:1.5rem;margin-bottom:4px;">• $1</li>');
+        
+        // 将连续的列表项包裹在 <ul> 中（简单处理）
+        html = html.replace(/(<li[^>]*>.*<\/li>\n?)+/g, (match) => {
+            return `<ul style="margin:6px 0;">${match}</ul>`;
+        });
+        
+        // 处理换行
+        html = html.replace(/\n/g, '<br>');
+        
+        return `<div style="word-wrap:break-word;white-space:normal;">${html}</div>`;
+    }
+    
+    // 提取代码片段（匹配 - 通过 `code` 描述 格式）
+    function extractCodeSnippets(mdText) {
+        const snippets = [];
+        const lines = mdText.split(/\r?\n/);
+        for (let line of lines) {
+            // 匹配 "- 通过 `code` 描述"
+            let match = line.match(/-\s*通过\s*`([^`]+)`\s*(.*)/);
+            if (match) {
+                snippets.push({ code: match[1], desc: match[2] || '代码示例' });
+                continue;
+            }
+            // 匹配 "- `code` 描述"
+            let genericMatch = line.match(/-\s*`([^`]+)`\s*(.*)/);
+            if (genericMatch) {
+                snippets.push({ code: genericMatch[1], desc: genericMatch[2] || '常用引用' });
+                continue;
+            }
+            // 匹配 "描述：`code`"
+            let colonMatch = line.match(/^[^-]*[：:]\s*`([^`]+)`\s*(.*)/);
+            if (colonMatch && colonMatch[1]) {
+                snippets.push({ code: colonMatch[1], desc: colonMatch[2] || line.substring(0, 30) });
+            }
+        }
+        return snippets;
+    }
+
+    // ========== 程序面板：直接读取 files 文件夹，支持点击下载 ==========
     async function loadProgramFiles() {
         const container = document.getElementById('programFileList');
         if (!container) return;
-        container.innerHTML = '<div class="loading-placeholder">加载文件清单...</div>';
-        // 模拟从远端或预定义文件列表，实际上可fetch('/files/filelist.json')等，但为了完整，我构建真实模拟data
-        // 同时如果服务器支持目录列表，也可以但有限，使用mock
-        const mockFiles = [
-            { name: 'index.html', date: '2026-05-10', size: '2.3 KB' },
-            { name: 'style.css', date: '2026-05-12', size: '4.1 KB' },
-            { name: 'index.js', date: '2026-05-13', size: '6.7 KB' },
-            { name: 'avatar.png', date: '2026-05-01', size: '48 KB' },
-            { name: 'icon.png', date: '2026-04-28', size: '1.2 KB' },
-            { name: 'Archive.md', date: '2026-05-09', size: '0.9 KB' }
-        ];
-        // 尝试实际去探测根目录files文件夹下是否有文件，但跨静态枚举不可靠，但可以提供说明
-        // 为了提高真实感，额外尝试请求检查 ./files/ 下是否可以获取，但不能保证，仍然展示默认清晰列表
-        // 同时也保留展示高级提示。
-        renderFileTable(container, mockFiles);
-        // 额外尝试探测真实files文件夹（可选不阻塞）
-        tryDetectRealFiles(container);
+        
+        container.innerHTML = '<div class="loading-placeholder">正在扫描 files 文件夹...</div>';
+        
+        try {
+            // 尝试通过 GitHub API 或目录列表获取文件
+            // 由于 GitHub Pages 不支持自动目录列表，我们使用一个策略：
+            // 预先定义一个文件列表配置文件 files/files.json，或者通过 fetch 逐个探测常用文件
+            // 为了让功能完整，我会尝试两种方式：
+            // 1. 尝试读取 files/files.json（如果用户创建了这个文件）
+            // 2. 如果没有，则提供手动添加文件到 files 文件夹的指引，并展示已存在的常见文件
+            
+            let files = [];
+            
+            // 方式1: 尝试读取 files/files.json 配置文件
+            try {
+                const configResp = await fetch('./files/files.json');
+                if (configResp.ok) {
+                    const fileList = await configResp.json();
+                    if (Array.isArray(fileList)) {
+                        files = fileList;
+                    }
+                }
+            } catch(e) {
+                console.log('未找到 files/files.json，将尝试探测文件');
+            }
+            
+            // 方式2: 如果没有配置文件，尝试探测常见文件类型
+            if (files.length === 0) {
+                // 常见的文件扩展名列表
+                const commonFiles = [
+                    'example.txt', 'sample.pdf', 'document.md', 'data.json', 
+                    'script.py', 'notes.txt', 'readme.md'
+                ];
+                
+                // 测试这些文件是否存在
+                const testResults = await Promise.all(
+                    commonFiles.map(async (filename) => {
+                        try {
+                            const resp = await fetch(`./files/${filename}`, { method: 'HEAD' });
+                            if (resp.ok) {
+                                // 获取文件大小
+                                const size = resp.headers.get('Content-Length');
+                                return {
+                                    name: filename,
+                                    size: size ? formatFileSize(parseInt(size)) : '未知大小',
+                                    date: new Date().toLocaleDateString()
+                                };
+                            }
+                        } catch(e) {}
+                        return null;
+                    })
+                );
+                
+                files = testResults.filter(f => f !== null);
+            }
+            
+            if (files.length === 0) {
+                container.innerHTML = `
+                    <div class="error-message">
+                        ⚠️ files 文件夹中没有检测到文件<br><br>
+                        <strong>使用方法：</strong><br>
+                        1. 在项目根目录创建 files 文件夹<br>
+                        2. 将文件放入 files 文件夹中<br>
+                        3. 可选：创建 files/files.json 配置文件来定义文件列表<br><br>
+                        <strong>files.json 格式示例：</strong><br>
+                        <pre style="background:rgba(0,0,0,0.05);padding:0.5rem;">[
+  {"name": "document.pdf", "size": "2.3 MB", "date": "2026-05-14"},
+  {"name": "code.zip", "size": "1.1 MB", "date": "2026-05-13"}
+]</pre>
+                    </div>
+                `;
+                return;
+            }
+            
+            renderFileTable(container, files);
+            
+        } catch (err) {
+            console.error('加载 files 文件夹失败:', err);
+            container.innerHTML = `<div class="error-message">无法加载文件列表: ${escapeHtml(err.message)}<br>请确保 files 文件夹存在，并包含文件</div>`;
+        }
     }
     
+    // 格式化文件大小
+    function formatFileSize(bytes) {
+        if (!bytes) return '未知';
+        const sizes = ['B', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(1024));
+        return (bytes / Math.pow(1024, i)).toFixed(1) + ' ' + sizes[i];
+    }
+    
+    // 渲染文件表格，支持点击下载
     function renderFileTable(container, files) {
-        if (!files.length) {
-            container.innerHTML = '<div class="error-message">暂无文件，请将文件放入 /files/ 目录下</div>';
-            return;
-        }
         const html = `
-            <div class="file-list-header" style="display:flex; justify-content:space-between; padding:0.5rem 1rem; border-bottom:1px solid rgba(255,255,255,0.2); font-weight:bold;">
-                <span>文件名称</span><span>日期</span><span>大小</span>
+            <div style="display:flex; justify-content:space-between; padding:0.5rem 1rem; border-bottom:1px solid rgba(0,0,0,0.1); font-weight:bold; color:#2c3e50;">
+                <span>文件名（点击下载）</span><span>日期</span><span>大小</span>
             </div>
             ${files.map(file => `
                 <div class="file-row">
-                    <span class="file-name">📄 ${escapeHtml(file.name)}</span>
-                    <span class="file-date">${escapeHtml(file.date)}</span>
-                    <span class="file-size">${escapeHtml(file.size)}</span>
+                    <span class="file-name" data-filename="${escapeHtml(file.name)}" data-filepath="./files/${escapeHtml(file.name)}">📄 ${escapeHtml(file.name)}</span>
+                    <span class="file-date">${escapeHtml(file.date || '未知')}</span>
+                    <span class="file-size">${escapeHtml(file.size || '未知')}</span>
                 </div>
             `).join('')}
-            <div class="file-row" style="opacity:0.7; font-size:0.75rem; justify-content:center;">✨ 基于项目根目录/files/ 实际文件展示 (模拟样例)</div>
+            <div style="padding:0.75rem; text-align:center; font-size:0.75rem; color:#5a6e7c;">
+                💡 提示：点击文件名即可下载文件
+            </div>
         `;
         container.innerHTML = html;
+        
+        // 绑定点击下载事件
+        document.querySelectorAll('.file-name').forEach(elem => {
+            elem.addEventListener('click', async (e) => {
+                const filename = elem.getAttribute('data-filename');
+                const filepath = elem.getAttribute('data-filepath');
+                if (filepath) {
+                    downloadFile(filepath, filename);
+                }
+            });
+        });
     }
     
-    async function tryDetectRealFiles(container) {
-        // 占位扩展: 可尝试读取一个/filesss目录，保守不覆盖，保留现有模拟
+    // 下载文件
+    async function downloadFile(url, filename) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('文件不存在');
+            const blob = await response.blob();
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(link.href);
+        } catch (err) {
+            alert(`下载失败: ${err.message}\n请确保文件 ${filename} 存在于 files 文件夹中`);
+        }
     }
-    
-    // ---------- 网站面板: Website 列表 ----------
+
+    // ========== 网站面板 ==========
     async function loadWebsiteList() {
         const container = document.getElementById('websiteList');
         if (!container) return;
-        // 预设网站列表 (Website1, Website2 ...)
+        
         const websites = [
             { name: 'LoliAPI - 随机图片/API', url: 'https://www.loliapi.com/', desc: '二次元与实用API' },
             { name: 'GitHub - LWIHX', url: 'https://github.com/lwihx', desc: '开源代码仓库' },
             { name: '背景图源', url: 'https://eo-img.iloli.love/i/pc/', desc: '高清壁纸资源' },
             { name: 'MDN Web Docs', url: 'https://developer.mozilla.org/zh-CN/', desc: '前端技术文档' }
         ];
-        renderWebsiteList(container, websites);
-    }
-    
-    function renderWebsiteList(container, sites) {
-        container.innerHTML = sites.map(site => `
+        
+        container.innerHTML = websites.map(site => `
             <div class="website-row">
                 <span class="website-name">🌐 <a href="${escapeHtml(site.url)}" target="_blank" rel="noopener" class="website-link">${escapeHtml(site.name)}</a></span>
                 <span class="website-status">${escapeHtml(site.desc)}</span>
@@ -214,14 +308,12 @@
         `).join('');
     }
     
-    // ---------- 页面启动时初始化所有内容 ----------
+    // 初始化
     async function init() {
         switchTab('home');
         await loadArchiveMarkdown();
         await loadProgramFiles();
         await loadWebsiteList();
-        
-        // 可选监听淡入淡出保留原有类
         const container = document.querySelector('.app-container');
         if (container) container.classList.add('fade-in');
     }

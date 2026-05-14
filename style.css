@@ -1,5 +1,4 @@
-/* style.css - 半透明磨砂玻璃效果 + 黑灰导航 + 淡入淡出动画 */
-
+/* style.css - 白色半透明磨砂玻璃样式 */
 * {
     margin: 0;
     padding: 0;
@@ -9,26 +8,23 @@
 body {
     min-height: 100vh;
     background: url('https://eo-img.iloli.love/i/pc/') center/cover no-repeat fixed;
-    background-color: #1a1e2a; /* 后备深色 */
+    background-color: #e8edf2;
     font-family: 'Segoe UI', 'Roboto', 'Noto Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
     padding: 2rem 1.5rem;
-    backdrop-filter: blur(0px);
-    position: relative;
 }
 
-/* 主容器：半透明白色方框风格，圆角 + 阴影 + 淡入淡出效果由fade-in类提供 */
+/* 主容器：白色半透明 + 毛玻璃效果 */
 .app-container {
     max-width: 1280px;
     margin: 0 auto;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(12px);
     border-radius: 2rem;
-    box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.1);
+    box-shadow: 0 25px 45px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.6);
     padding: 1.8rem 2rem;
     transition: all 0.3s ease;
 }
 
-/* 淡入淡出动画 */
 .fade-in {
     animation: fadeInUp 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
 }
@@ -44,7 +40,7 @@ body {
     }
 }
 
-/* 头部区域 */
+/* 头部样式 */
 .site-header {
     display: flex;
     justify-content: space-between;
@@ -52,7 +48,7 @@ body {
     flex-wrap: wrap;
     gap: 1rem;
     padding-bottom: 1.2rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     margin-bottom: 1.2rem;
 }
 
@@ -67,51 +63,48 @@ body {
     height: 48px;
     border-radius: 50%;
     object-fit: cover;
-    background: rgba(0, 0, 0, 0.2);
-    border: 2px solid rgba(255,255,240,0.6);
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
 .site-title {
     font-size: 1.8rem;
     font-weight: 700;
     letter-spacing: 1px;
-    background: linear-gradient(135deg, #fff, #e0e0ff);
+    background: linear-gradient(135deg, #2c3e50, #1a2a3a);
     background-clip: text;
     -webkit-background-clip: text;
     color: transparent;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
 
 .github-link {
-    background: rgba(30, 30, 40, 0.7);
+    background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(4px);
     padding: 0.5rem 1.2rem;
     border-radius: 40px;
-    color: #f0f0f0;
+    color: #2c3e50;
     text-decoration: none;
     font-weight: 500;
     transition: all 0.2s;
-    border: 1px solid rgba(255,255,255,0.2);
+    border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .github-link:hover {
-    background: #2d333b;
-    color: white;
-    border-color: rgba(255,255,255,0.5);
+    background: rgba(255, 255, 255, 0.9);
     transform: scale(1.02);
 }
 
-/* 导航栏按钮：黑灰色风格（除高亮外） */
+/* 导航栏：半透明白色背景 */
 .main-nav {
     display: flex;
     gap: 0.5rem;
-    background: rgba(0, 0, 0, 0.35);
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(8px);
     border-radius: 60px;
     padding: 0.4rem;
     margin-bottom: 2rem;
-    backdrop-filter: blur(4px);
     width: fit-content;
+    border: 1px solid rgba(255, 255, 255, 0.6);
 }
 
 .nav-btn {
@@ -123,26 +116,22 @@ body {
     border-radius: 40px;
     cursor: pointer;
     transition: all 0.2s;
-    color: #eaeef2;
-    /* 默认黑灰色系文字，背景半透明黑 */
-    background-color: rgba(30, 30, 35, 0.6);
-    backdrop-filter: blur(4px);
-    letter-spacing: 0.5px;
+    color: #2c3e50;
 }
 
 .nav-btn.active {
-    background: #2c2f36;
-    color: white;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-    border: 1px solid rgba(255,255,255,0.25);
+    background: rgba(255, 255, 255, 0.95);
+    color: #1a2a3a;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.8);
 }
 
 .nav-btn:not(.active):hover {
-    background: rgba(50, 55, 65, 0.8);
-    color: #ffffff;
+    background: rgba(255, 255, 255, 0.6);
+    color: #1a2a3a;
 }
 
-/* tab 面板切换 */
+/* 面板切换动画 */
 .tab-panel {
     display: none;
     animation: fadePanel 0.3s ease;
@@ -157,7 +146,7 @@ body {
     to { opacity: 1; transform: translateY(0);}
 }
 
-/* 首页布局 左右结构 */
+/* 首页布局 */
 .home-layout {
     display: flex;
     flex-wrap: wrap;
@@ -166,12 +155,12 @@ body {
 
 .home-left {
     flex: 1.2;
-    min-width: 240px;
-    background: rgba(20, 20, 30, 0.5);
-    backdrop-filter: blur(4px);
+    min-width: 260px;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(8px);
     border-radius: 1.5rem;
     padding: 1.5rem;
-    border: 1px solid rgba(255,255,255,0.2);
+    border: 1px solid rgba(255, 255, 255, 0.8);
 }
 
 .home-profile {
@@ -183,68 +172,80 @@ body {
     width: 96px;
     height: 96px;
     border-radius: 50%;
-    border: 3px solid rgba(255,255,210,0.7);
+    border: 3px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     object-fit: cover;
     margin-bottom: 0.8rem;
 }
 
 .home-name {
     font-size: 1.8rem;
-    color: #f5f5ff;
-    text-shadow: 0 1px 3px black;
-    letter-spacing: 1px;
+    color: #1e2a3a;
 }
 
 .home-github-mobile a {
-    color: #bbd9ff;
+    color: #5a6e7c;
     text-decoration: none;
     font-size: 0.9rem;
 }
 
 .archive-box {
     margin-top: 1rem;
-    background: rgba(0, 0, 0, 0.25);
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(4px);
     border-radius: 1.2rem;
     padding: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.6);
 }
 
 .archive-header {
     display: flex;
     justify-content: space-between;
     font-weight: bold;
-    color: #ffecb3;
-    border-bottom: 1px dashed rgba(255,255,200,0.5);
+    color: #2c3e50;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     padding-bottom: 6px;
     margin-bottom: 12px;
 }
 
 .archive-content {
     font-size: 0.9rem;
-    color: #eef2ff;
-    line-height: 1.5;
+    color: #1e2a3a;
+    line-height: 1.6;
+    word-wrap: break-word;
+    white-space: normal;
+    overflow-wrap: break-word;
 }
 
-.archive-content pre, .archive-content code {
-    background: #1e1e2e;
+.archive-content code,
+.archive-content pre {
+    background: rgba(0, 0, 0, 0.05);
     padding: 2px 6px;
-    border-radius: 12px;
+    border-radius: 8px;
     font-family: monospace;
+    word-break: break-all;
+    white-space: pre-wrap;
+}
+
+.archive-content pre {
+    padding: 0.75rem;
+    overflow-x: auto;
 }
 
 .home-right {
     flex: 2;
-    background: rgba(25, 25, 35, 0.5);
-    backdrop-filter: blur(4px);
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(8px);
     border-radius: 1.5rem;
     padding: 1.5rem;
-    border: 1px solid rgba(255,255,255,0.2);
+    border: 1px solid rgba(255, 255, 255, 0.8);
 }
 
 .info-card h3 {
-    color: #f0f0f0;
+    color: #1e2a3a;
     margin-bottom: 1rem;
     font-size: 1.4rem;
-    border-left: 5px solid #ffbb77;
+    border-left: 5px solid #86b7fe;
     padding-left: 12px;
 }
 
@@ -255,122 +256,144 @@ body {
 }
 
 .snippet-item {
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(255, 255, 255, 0.7);
     border-radius: 1rem;
     padding: 0.8rem 1rem;
-    transition: 0.1s;
+    border: 1px solid rgba(255, 255, 255, 0.8);
 }
 
 .snippet-code {
     font-family: 'JetBrains Mono', 'Fira Code', monospace;
-    background: #0f0f17;
+    background: rgba(0, 0, 0, 0.05);
     padding: 0.5rem;
     border-radius: 12px;
-    color: #d6deeb;
+    color: #1e2a3a;
     font-size: 0.85rem;
     word-break: break-all;
     margin-top: 6px;
 }
 
 .snippet-desc {
-    color: #ccc;
+    color: #5a6e7c;
     margin-top: 5px;
     font-size: 0.8rem;
 }
 
-/* 底部 LoliAPI 居中对齐 */
+/* 底部 LoliAPI */
 .home-footer {
     margin-top: 2.5rem;
     text-align: center;
     padding-top: 1rem;
-    border-top: 1px solid rgba(255,255,255,0.2);
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .loli-api-link {
     display: inline-block;
-    background: rgba(255, 120, 160, 0.7);
-    backdrop-filter: blur(8px);
+    background: rgba(134, 183, 254, 0.8);
+    backdrop-filter: blur(4px);
     color: white;
     text-decoration: none;
     padding: 0.5rem 1.8rem;
     border-radius: 40px;
     font-weight: bold;
     transition: 0.2s;
-    box-shadow: 0 0 6px rgba(255,200,220,0.4);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
 }
 
 .loli-api-link:hover {
-    background: #ff8aa7;
+    background: rgba(110, 168, 254, 0.9);
     transform: scale(1.03);
 }
 
-/* 程序面板 & 网站面板 通用列表 */
+/* 程序面板和网站面板通用样式 */
 .panel-header {
     margin-bottom: 1.5rem;
 }
 
 .panel-header h2 {
-    color: white;
+    color: #1e2a3a;
     font-size: 1.8rem;
 }
 
 .path-hint {
-    color: #cdd9ff;
+    color: #5a6e7c;
     font-size: 0.85rem;
-    opacity: 0.8;
 }
 
-.file-list-container, .website-list-container {
-    background: rgba(15, 15, 22, 0.6);
-    backdrop-filter: blur(5px);
+.file-list-container,
+.website-list-container {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(8px);
     border-radius: 1.2rem;
     padding: 0.8rem;
+    border: 1px solid rgba(255, 255, 255, 0.8);
 }
 
-.file-row, .website-row {
+.file-row,
+.website-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 0.9rem 1rem;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
     transition: 0.1s;
-    color: #f0f0f0;
+    color: #1e2a3a;
 }
 
-.file-row:last-child, .website-row:last-child {
+.file-row:last-child,
+.website-row:last-child {
     border-bottom: none;
 }
 
-.file-name, .website-name {
+.file-name {
+    font-weight: 500;
+    word-break: break-word;
+    flex: 2;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.file-name:hover {
+    color: #86b7fe;
+    text-decoration: underline;
+}
+
+.file-date,
+.file-size,
+.website-status {
+    flex: 1;
+    text-align: right;
+    font-size: 0.85rem;
+    color: #5a6e7c;
+}
+
+.website-name {
     font-weight: 500;
     word-break: break-word;
     flex: 2;
 }
-.file-date, .file-size, .website-status {
-    flex: 1;
-    text-align: right;
-    font-size: 0.85rem;
-    color: #bfc9ff;
-}
+
 .website-link {
-    color: #9bc0ff;
+    color: #86b7fe;
     text-decoration: none;
-    border-bottom: 1px dashed #7f9fef;
-}
-.website-link:hover {
-    color: white;
+    border-bottom: 1px dashed #86b7fe;
 }
 
-.loading-placeholder, .archive-loading {
-    color: #cfd9ff;
+.website-link:hover {
+    color: #0d6efd;
+}
+
+.loading-placeholder,
+.archive-loading {
+    color: #5a6e7c;
     padding: 1rem;
     text-align: center;
     font-style: italic;
 }
 
 .error-message {
-    color: #ffaaaa;
-    background: rgba(100,0,0,0.3);
+    color: #dc3545;
+    background: rgba(220, 53, 69, 0.1);
     padding: 0.5rem;
     border-radius: 16px;
 }
@@ -394,7 +417,8 @@ body {
         flex-wrap: wrap;
         gap: 0.3rem;
     }
-    .file-date, .file-size {
+    .file-date,
+    .file-size {
         text-align: left;
         margin-top: 4px;
     }
