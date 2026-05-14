@@ -1,4 +1,4 @@
-#                                                  常用HTML代码，及图片
+#                                                  常用HTML代码
 # 正文
-- 通过 `<link rel="stylesheet" href="./style.css">` 引入样式文件
-- 通过 `<script src="./index.js"></script>` 引入脚本文件
+- 通过 `<img src="https://manosaba-test.asachiri.com/assets/characters/Nanoka.png" alt="description">` 加载图片
+- 通过 `<iframe src="https://bilibili.com" width="800" height="600"></iframe>` 内嵌网页，示例bilibili
