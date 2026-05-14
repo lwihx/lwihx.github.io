@@ -310,34 +310,29 @@
     
     // 设置随机背景图片
 async function setRandomBackground() {
-    const apiUrl = 'https://www.loliapi.com/acg/pc/';
+    // 方法1：直接使用已知的图片源（最稳定）
+    // 这些是 LoliAPI 实际返回的图片 URL 格式
+    const imageUrls = [
+        'https://esa-img.521799.xyz/i/pc/img222.webp',
+    ];
     
-    try {
-        // 方法1：API 直接返回图片，我们可以创建一个 Image 对象来预加载
-        const img = new Image();
-        
-        // 给图片添加时间戳避免缓存
-        const imgUrl = `${apiUrl}?t=${Date.now()}`;
-        
-        img.onload = function() {
-            document.body.style.backgroundImage = `url('${imgUrl}')`;
-            document.body.style.backgroundSize = 'cover';
-            document.body.style.backgroundPosition = 'center';
-            document.body.style.backgroundRepeat = 'no-repeat';
-            document.body.style.backgroundAttachment = 'fixed';
-        };
-        
-        img.onerror = function() {
-            console.warn('背景图片加载失败，使用备用背景');
-            document.body.style.backgroundColor = '#e8edf2';
-        };
-        
-        img.src = imgUrl;
-        
-    } catch (err) {
-        console.error('设置背景图片失败:', err);
+    // 随机选择一张图片
+    const randomIndex = Math.floor(Math.random() * imageUrls.length);
+    const imgUrl = `${imageUrls[randomIndex]}?t=${Date.now()}`;
+    
+    const img = new Image();
+    img.onload = function() {
+        document.body.style.backgroundImage = `url('${imgUrl}')`;
+        document.body.style.backgroundSize = 'cover';
+        document.body.style.backgroundPosition = 'center';
+        document.body.style.backgroundRepeat = 'no-repeat';
+        document.body.style.backgroundAttachment = 'fixed';
+    };
+    img.onerror = function() {
+        console.warn('背景图片加载失败，使用备用背景');
         document.body.style.backgroundColor = '#e8edf2';
-    }
+    };
+    img.src = imgUrl;
 }
     
     // 初始化
