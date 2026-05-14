@@ -310,29 +310,50 @@
     
     // 设置随机背景图片
 async function setRandomBackground() {
-    // 方法1：直接使用已知的图片源（最稳定）
-    // 这些是 LoliAPI 实际返回的图片 URL 格式
-    const imageUrls = [
-        'https://esa-img.521799.xyz/i/pc/img222.webp',
-    ];
+    const apiUrl = 'https://www.loliapi.com/bg/';
     
-    // 随机选择一张图片
-    const randomIndex = Math.floor(Math.random() * imageUrls.length);
-    const imgUrl = `${imageUrls[randomIndex]}?t=${Date.now()}`;
-    
-    const img = new Image();
-    img.onload = function() {
-        document.body.style.backgroundImage = `url('${imgUrl}')`;
-        document.body.style.backgroundSize = 'cover';
-        document.body.style.backgroundPosition = 'center';
-        document.body.style.backgroundRepeat = 'no-repeat';
-        document.body.style.backgroundAttachment = 'fixed';
-    };
-    img.onerror = function() {
-        console.warn('背景图片加载失败，使用备用背景');
-        document.body.style.backgroundColor = '#e8edf2';
-    };
-    img.src = imgUrl;
+    try {
+        // 使用 fetch 获取重定向后的最终 URL
+        const response = await fetch(apiUrl, {
+            method: 'HEAD',  // 只需要头部信息，不需要下载图片内容
+            redirect: 'follow'  // 自动跟随重定向
+        });
+        
+        // 获取最终的实际图片 URL
+        const finalUrl = response.url;
+        
+        if (finalUrl && (finalUrl.endsWith('.webp') || finalUrl.endsWith('.jpg') || finalUrl.endsWith('.png'))) {
+            // 预加载图片，确保加载成功后再设置背景
+            const img = new Image();
+            img.onload = function() {
+                document.body.style.backgroundImage = `url('${finalUrl}')`;
+                document.body.style.backgroundSize = 'cover';
+                document.body.style.backgroundPosition = 'center';
+                document.body.style.backgroundRepeat = 'no-repeat';
+                document.body.style.backgroundAttachment = 'fixed';
+            };
+            img.onerror = function() {
+                console.warn('背景图片加载失败，使用备用背景');
+                useFallbackBackground();
+            };
+            img.src = finalUrl;
+        } else {
+            throw new Error('未获取到有效的图片 URL');
+        }
+        
+    } catch (err) {
+        console.error('设置背景图片失败:', err);
+        useFallbackBackground();
+    }
+}
+
+function useFallbackBackground() {
+    // 备用背景：使用原来的图片源
+    document.body.style.backgroundImage = "url('https://eo-img.iloli.love/i/pc/')";
+    document.body.style.backgroundSize = 'cover';
+    document.body.style.backgroundPosition = 'center';
+    document.body.style.backgroundRepeat = 'no-repeat';
+    document.body.style.backgroundAttachment = 'fixed';
 }
     
     // 初始化
