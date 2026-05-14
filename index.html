@@ -15,8 +15,9 @@
 
         body {
             min-height: 100vh;
-            /* 背景图片调用 */
+            /* 背景图片调用
             background: url('https://eo-img.iloli.love/i/pc/') center/cover no-repeat fixed;
+            */
             background-color: #e8edf2;
             font-family: 'Segoe UI', 'Roboto', 'Noto Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
             padding: 2rem 1.5rem;
@@ -629,8 +630,27 @@
             container.innerHTML = rowsHtml || '<div class="loading-placeholder">暂无站点</div>';
         }
         
+        // 设置随机背景图片
+function setRandomBackground() {
+    const imgUrl = `https://www.loliapi.com/bg/?t=${Date.now()}`;
+    const img = new Image();
+    img.onload = function() {
+        document.body.style.backgroundImage = `url('${imgUrl}')`;
+        document.body.style.backgroundSize = 'cover';
+        document.body.style.backgroundPosition = 'center';
+        document.body.style.backgroundRepeat = 'no-repeat';
+        document.body.style.backgroundAttachment = 'fixed';
+    };
+    img.onerror = function() {
+        document.body.style.backgroundColor = '#e8edf2';
+        document.body.style.backgroundImage = "url('https://eo-img.iloli.love/i/pc/')";
+    };
+    img.src = imgUrl;
+}
+        
         // 初始化所有模块
         async function init() {
+			setRandomBackground();
             switchTab('home');
             await loadArchiveMarkdown();   // 加载右侧 Archive.md
             loadProgramHardcoded();        // 程序硬编码列表（带下载）
