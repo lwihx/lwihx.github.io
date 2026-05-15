@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>LWIHX的小站</title>
-    <!-- 引入 marked.js 解析 Markdown -->
+    <!-- 引入 Font Awesome 图标库 -->
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 引入 marked.js 以解析 Markdown -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         * {
@@ -227,7 +229,7 @@
 
         .archive-header {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: baseline;
             border-bottom: 2px solid rgba(0,0,0,0.1);
             padding-bottom: 8px;
@@ -573,13 +575,14 @@
             <span class="site-title">LWIHX</span>
         </div>
         <div class="header-right">
-            <a href="https://github.com/lwihx" target="_blank" rel="noopener noreferrer" class="github-link">Github</a>
+            <a href="https://github.com/lwihx" target="_blank" rel="noopener noreferrer" class="github-link">
+            <i class="fab fa-github"></i> Github </a>
         </div>
     </header>
 
     <nav class="main-nav">
         <button class="nav-btn active" data-tab="home">首页</button>
-        <button class="nav-btn" data-tab="program">程序</button>
+        <button class="nav-btn" data-tab="program">程序&文件</button>
         <button class="nav-btn" data-tab="website">网站</button>
         <button class="nav-btn" id="aboutBtn">关于</button>
     </nav>
@@ -592,7 +595,8 @@
                         <img src="./avatar.png" alt="avatar-large" class="home-avatar" onerror="this.src='https://via.placeholder.com/96?text=Avatar'">
                         <h2 class="home-name">LWIHX</h2>
                         <div class="home-github-mobile">
-                            <a href="https://github.com/lwihx" target="_blank" rel="noopener noreferrer">GitHub@lwihx</a>
+                            <a href="https://github.com/lwihx" target="_blank" rel="noopener noreferrer">
+                            <i class="fab fa-github"></i> GitHub </a>
                         </div>
                     </div>
                 </div>
@@ -600,7 +604,6 @@
                     <div class="archive-card">
                         <div class="archive-header">
                             <span>Archive</span>
-                            <span class="archive-sub">内容</span>
                         </div>
                         <div class="archive-content" id="archiveContent">
                             <div class="loading-placeholder">正在加载 Archive ...</div>
@@ -615,7 +618,7 @@
 
         <div id="programPanel" class="tab-panel">
             <div class="panel-header">
-                <h2>Applications</h2>
+                <h2>Application&File</h2>
                 <p class="path-hint">点击文件名即可下载</p>
             </div>
             <div class="file-list-container" id="programFileList">
@@ -638,7 +641,7 @@
 <div class="modal-overlay" id="aboutModal">
     <div class="modal-container">
         <div class="modal-header">
-            <h3>ABOUT</h3>
+        <h3 style="flex: 1; text-align: center;">ABOUT</h3>
             <button class="modal-close" id="modalCloseBtn">&times;</button>
         </div>
         <div class="modal-body" id="modalBody">
@@ -698,7 +701,7 @@
                 }
             } catch (err) {
                 console.warn(err);
-                archiveContainer.innerHTML = `<div class="error-message">❌ 无法加载 Archive.md，请确保根目录下有 Archive/Archive.md 文件<br>错误: ${err.message}</div>`;
+                archiveContainer.innerHTML = `<div class="error-message">❌ 无法加载 Archive.md<br>错误: ${err.message}</div>`;
             }
         }
 
@@ -752,7 +755,7 @@
             
             const rowsHtml = websites.map(site => `
                 <div class="website-row">
-                    <span class="website-name">🌐 <a href="${escapeHtml(site.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(site.name)}</a></span>
+                    <span class="website-name">◇ <a href="${escapeHtml(site.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(site.name)}</a></span>
                     <span class="website-desc">${escapeHtml(site.desc)}</span>
                 </div>
             `).join('');
@@ -819,7 +822,7 @@ async function loadAboutMarkdown() {
         }
     } catch (err) {
         console.error('加载 about.md 失败:', err);
-        modalBody.innerHTML = `<div class="error-message">❌ 无法加载 /about/about.md 文件<br>错误: ${err.message}</div>`;
+        modalBody.innerHTML = `<div class="error-message">❌ 无法加载 about.md<br>错误: ${err.message}</div>`;
     }
 }
 
