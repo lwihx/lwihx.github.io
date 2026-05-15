@@ -467,7 +467,7 @@
     z-index: 1000;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.3s ease, visibility 0.3s ease;
+    transition: opacity 1.2s ease, visibility 1.2s ease;
 }
 
 .modal-overlay.active {
@@ -487,7 +487,7 @@
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
     overflow: hidden;
     transform: scale(0.9);
-    transition: transform 0.3s ease;
+    transition: transform 1.2s ease;
 }
 
 .modal-overlay.active .modal-container {
@@ -724,9 +724,9 @@
             ];
             
             const headerHtml = `<div class="file-list-header">
-                <span>文件名</span>
-                <span>日期</span>
-                <span>大小</span>
+                <span style="flex: 2;">文件名</span>
+                <span style="flex: 1; text-align: center;">上传日期</span>
+                <span style="flex: 0.8; text-align: right;">大小</span>
             </div>`;
             
             const rowsHtml = files.map(file => `
@@ -778,7 +778,7 @@ function setRandomBackground() {
     img.onerror = function() {
         console.warn('背景图片加载失败，使用备用图片源');
         // 备用方案
-        const fallbackUrl = `https://eo-img.iloli.love/i/pc/?t=${Date.now()}`;
+        const fallbackUrl = `https://eo-img.iloli.love/i/pc/?quality=50&t=${Date.now()}`;
         document.body.style.backgroundImage = `url('${fallbackUrl}')`;
         document.body.style.backgroundSize = 'cover';
         document.body.style.backgroundPosition = 'center';
