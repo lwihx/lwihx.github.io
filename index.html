@@ -450,6 +450,111 @@
             border-color: rgba(0,0,0,0.05);
         }
 
+/* 弹窗遮罩层 */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0);
+    backdrop-filter: blur(0px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* 弹窗内容 */
+.modal-container {
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    background: rgba(255, 255, 255, 0.80);
+    backdrop-filter: blur(4px);
+    border-radius: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.modal-overlay.active .modal-container {
+    transform: scale(1);
+}
+
+/* 弹窗头部 */
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.modal-header h3 {
+    font-size: 1.3rem;
+    color: #1e2f3e;
+    margin: 0;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: #5a6e7c;
+    transition: color 0.2s;
+}
+
+.modal-close:hover {
+    color: #dc3545;
+}
+
+/* 弹窗内容区 */
+.modal-body {
+    padding: 1.5rem;
+    max-height: 60vh;
+    overflow-y: auto;
+    color: #1e2f3e;
+    line-height: 1.6;
+}
+
+/* 弹窗内 Markdown 样式 */
+.modal-body h1 {
+    font-size: 1.5rem;
+    margin: 0.5rem 0;
+    border-left: 4px solid #86b7fe;
+    padding-left: 12px;
+}
+.modal-body h2 {
+    font-size: 1.3rem;
+    margin: 0.5rem 0;
+}
+.modal-body p {
+    margin: 0.5rem 0;
+}
+.modal-body code {
+    background: rgba(0,0,0,0.08);
+    padding: 0.2rem 0.4rem;
+    border-radius: 6px;
+}
+.modal-body pre {
+    background: rgba(0,0,0,0.05);
+    padding: 0.75rem;
+    border-radius: 8px;
+    overflow-x: auto;
+}
+
         @media (max-width: 750px) {
             body { padding: 1rem; }
             .app-container { padding: 1rem; }
@@ -476,6 +581,7 @@
         <button class="nav-btn active" data-tab="home">首页</button>
         <button class="nav-btn" data-tab="program">程序</button>
         <button class="nav-btn" data-tab="website">网站</button>
+        <button class="nav-btn" id="aboutBtn">关于</button>
     </nav>
 
     <main class="tab-content-wrapper">
@@ -526,6 +632,19 @@
             </div>
         </div>
     </main>
+</div>
+
+<!-- 弹窗 -->
+<div class="modal-overlay" id="aboutModal">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h3>ABOUT</h3>
+            <button class="modal-close" id="modalCloseBtn">&times;</button>
+        </div>
+        <div class="modal-body" id="modalBody">
+            <div class="loading-placeholder">正在加载...</div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -665,6 +784,67 @@ function setRandomBackground() {
     };
     img.src = imgUrl;
 }
+        
+        // 弹窗元素
+const aboutModal = document.getElementById('aboutModal');
+const modalBody = document.getElementById('modalBody');
+const aboutBtn = document.getElementById('aboutBtn');
+const modalCloseBtn = document.getElementById('modalCloseBtn');
+
+// 打开弹窗
+function openModal() {
+    aboutModal.classList.add('active');
+}
+
+// 关闭弹窗
+function closeModal() {
+    aboutModal.classList.remove('active');
+}
+
+// 加载 about.md 内容
+async function loadAboutMarkdown() {
+    const aboutUrl = '/about/about.md';
+    modalBody.innerHTML = '<div class="loading-placeholder">正在加载...</div>';
+    
+    try {
+        const response = await fetch(aboutUrl);
+        if (!response.ok) throw new Error(`HTTP ${response.status} - 文件不存在`);
+        const markdownText = await response.text();
+        
+        if (typeof marked !== 'undefined') {
+            const htmlContent = marked.parse(markdownText);
+            modalBody.innerHTML = htmlContent;
+        } else {
+            modalBody.innerHTML = `<pre style="white-space: pre-wrap;">${escapeHtml(markdownText)}</pre>`;
+        }
+    } catch (err) {
+        console.error('加载 about.md 失败:', err);
+        modalBody.innerHTML = `<div class="error-message">❌ 无法加载 /about/about.md 文件<br>错误: ${err.message}</div>`;
+    }
+}
+
+// 绑定事件
+aboutBtn.addEventListener('click', async () => {
+    await loadAboutMarkdown();
+    openModal();
+});
+
+modalCloseBtn.addEventListener('click', closeModal);
+
+// 点击遮罩层关闭
+aboutModal.addEventListener('click', (e) => {
+    if (e.target === aboutModal) {
+        closeModal();
+    }
+});
+
+// ESC 键关闭
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && aboutModal.classList.contains('active')) {
+        closeModal();
+    }
+});
+        
         
         // 初始化所有模块
         async function init() {
