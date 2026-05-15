@@ -564,6 +564,39 @@
     overflow-x: auto;
 }
 
+
+/* 下载链接样式 */
+.download-links {
+    margin-top: 6px;
+    font-size: 0.75rem;
+}
+
+.download-links a {
+    display: inline-block;
+    margin-right: 12px;
+    padding: 2px 8px;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 20px;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.download-links a:first-child {
+    color: #2c5282;
+    border: 1px solid rgba(44, 82, 130, 0.3);
+}
+
+.download-links a:last-child {
+    color: #2e7d32;
+    border: 1px solid rgba(46, 125, 50, 0.3);
+}
+
+.download-links a:hover {
+    background: rgba(255, 255, 255, 0.8);
+    transform: translateY(-1px);
+}
+
+
         @media (max-width: 750px) {
             body { padding: 1rem; }
             .app-container { padding: 1rem; }
@@ -628,7 +661,7 @@
         <div id="programPanel" class="tab-panel">
             <div class="panel-header">
                 <h2>Application&File</h2>
-                <p class="path-hint">点击文件名即可下载</p>
+                <p class="path-hint"><strong>点击文件名即可下载</strong></p>
             </div>
             <div class="file-list-container" id="programFileList">
             </div>
@@ -724,30 +757,57 @@
         }
 
         function loadProgramHardcoded() {
-            const container = document.getElementById('programFileList');
-            if (!container) return;
-            const files = [
-                { name: 'JiYuTrainer', displayName: 'JiYuTrainer', date: '2026-5-14', size: '4MB', downloadUrl: 'https://lwihx.github.io/files/JiYuTrainer-1.7.16.zip' },
-                { name: 'emahiro99', displayName: '艾希(emahiro99)', date: '2026-5-14', size: '2MB', downloadUrl: 'https://lwihx.github.io/files/艾希.zip' },
-                { name: '7zip', displayName: '7zip', date: '2026-5-14', size: '2MB', downloadUrl: 'https://lwihx.github.io/7zip.zip' },
-            ];
-            
-            const headerHtml = `<div class="file-list-header">
-                <span style="flex: 2;">文件名</span>
-                <span style="flex: 1; text-align: center;">上传日期</span>
-                <span style="flex: 0.8; text-align: right;">大小</span>
-            </div>`;
-            
-            const rowsHtml = files.map(file => `
-                <div class="file-row">
-                    <span class="file-name"><a href="${file.downloadUrl}" target="_blank" download>📄 ${escapeHtml(file.displayName)}</a></span>
-                    <span class="file-date">${escapeHtml(file.date)}</span>
-                    <span class="file-size">${escapeHtml(file.size)}</span>
+    const container = document.getElementById('programFileList');
+    if (!container) return;
+    const files = [
+        { 
+            name: 'JiYuTrainer', 
+            displayName: 'JiYuTrainer', 
+            date: '2026-5-14', 
+            size: '4MB', 
+            downloadUrl: 'https://lwihx.github.io/files/JiYuTrainer-1.7.16.zip',
+            mirrorUrl: 'https://cdn.jsdelivr.net/gh/lwihx/lwihx.github.io/files/JiYuTrainer-1.7.16.zip'
+        },
+        { 
+            name: 'emahiro99', 
+            displayName: '艾希(emahiro99)', 
+            date: '2026-5-14', 
+            size: '2MB', 
+            downloadUrl: 'https://lwihx.github.io/files/艾希.zip',
+            mirrorUrl: 'https://cdn.jsdelivr.net/gh/lwihx/lwihx.github.io/files/艾希.zip'
+        },
+        { 
+            name: '7zip', 
+            displayName: '7zip', 
+            date: '2026-5-14', 
+            size: '2MB', 
+            downloadUrl: 'https://lwihx.github.io/files/7zip.zip',
+            mirrorUrl: 'https://cdn.jsdelivr.net/gh/lwihx/lwihx.github.io/files/7zip.zip'
+        },
+    ];
+    
+    const headerHtml = `<div class="file-list-header">
+        <span style="flex: 2;">文件名</span>
+        <span style="flex: 1; text-align: center;">上传日期</span>
+        <span style="flex: 0.8; text-align: right;">文件大小</span>
+    </div>`;
+    
+    const rowsHtml = files.map(file => `
+        <div class="file-row">
+            <span class="file-name">
+                📄 ${escapeHtml(file.displayName)}
+                <div class="download-links">
+                    <a href="${file.downloadUrl}" target="_blank" download>直接下载</a>
+                    <a href="${file.mirrorUrl}" target="_blank" download>CDN加速下载</a>
                 </div>
-            `).join('');
-            
-            container.innerHTML = headerHtml + rowsHtml + `<div style="padding:0.75rem; text-align:center; font-size:0.7rem; opacity:0.7;">—— 点击文件名可直接下载 ——</div>`;
-        }
+            </span>
+            <span class="file-date">${escapeHtml(file.date)}</span>
+            <span class="file-size">${escapeHtml(file.size)}</span>
+        </div>
+    `).join('');
+    
+    container.innerHTML = headerHtml + rowsHtml + `<div style="padding:0.75rem; text-align:center; font-size:0.7rem; opacity:0.7;"><strong>优先选择「CND加速」，如果「CND加速」链接不可用则选择「直接下载」<strong></div>`;
+}
         
         function loadWebsitesHardcoded() {
             const container = document.getElementById('websiteList');
@@ -862,9 +922,9 @@ document.addEventListener('keydown', (e) => {
         async function init() {
 			setRandomBackground();
             switchTab('home');
-            await loadArchiveMarkdown();   // 加载右侧 Archive.md
-            loadProgramHardcoded();        // 程序硬编码列表（带下载）
-            loadWebsitesHardcoded();       // 网站硬编码列表
+            await loadArchiveMarkdown();   // 加载 Archive.md
+            loadProgramHardcoded();        // 程序列表（带下载）
+            loadWebsitesHardcoded();       // 网站列表
             // 淡入淡出效果保持
             const containerDiv = document.querySelector('.app-container');
             if (containerDiv) containerDiv.classList.add('fade-in');
