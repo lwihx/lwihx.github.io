@@ -39,7 +39,7 @@
 
         /* 淡入淡出效果 */
         .fade-in {
-            animation: fadeInUp 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            animation: fadeInUp 2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
         }
 
         @keyframes fadeInUp {
@@ -105,7 +105,7 @@
             color: #1e2f3e;
             text-decoration: none;
             font-weight: 500;
-            transition: all 3s;
+            transition: all 0.2s;
             border: 1px solid rgba(255,255,255,0.8);
         }
 
@@ -135,7 +135,7 @@
             font-weight: 600;
             border-radius: 40px;
             cursor: pointer;
-            transition: all 3s;
+            transition: all 0.2s;
             color: #eef2f5;
             background-color: rgba(35, 35, 45, 0.6);
             /* backdrop-filter: blur(3px); 耗性能 */
@@ -156,7 +156,7 @@
         /* 面板切换 */
         .tab-panel {
             display: none;
-            animation: fadePanel 0.3s ease;
+            animation: fadePanel 1.8s ease;
         }
 
         .tab-panel.active-panel {
@@ -322,7 +322,7 @@
             padding: 0.5rem 1.8rem;
             border-radius: 40px;
             font-weight: bold;
-            transition: 3s;
+            transition: 0.2s;
             border: 1px solid rgba(255,255,255,0.8);
         }
 
@@ -778,7 +778,7 @@ function setRandomBackground() {
     img.onerror = function() {
         console.warn('背景图片加载失败，使用备用图片源');
         // 备用方案
-        const fallbackUrl = `https://eo-img.iloli.love/i/pc/?quality=50&t=${Date.now()}`;
+        const fallbackUrl = `https://eo-img.iloli.love/i/pc/?t=${Date.now()}`;
         document.body.style.backgroundImage = `url('${fallbackUrl}')`;
         document.body.style.backgroundSize = 'cover';
         document.body.style.backgroundPosition = 'center';
