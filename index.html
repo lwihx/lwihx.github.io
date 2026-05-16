@@ -533,7 +533,7 @@
         <button class="nav-btn active" data-tab="home">首页</button>
         <button class="nav-btn" data-tab="program">程序&文件</button>
         <button class="nav-btn" data-tab="website">网站</button>
-        <button class="nav-btn" id="Developing">开发中</button>
+        <button class="nav-btn" id="testBtn">TEST</button>
         <button class="nav-btn" id="aboutBtn">关于</button>
     </nav>
 
@@ -623,8 +623,14 @@
                     if (key === tabId) panels[key].classList.add('active-panel');
                     else panels[key].classList.remove('active-panel');
                 }
-            });
-        }
+               const testBtn = document.getElementById('testBtn');
+			   if (testBtn) {
+				testBtn.addEventListener('click', () => {
+				window.location.href = 'https://lwihx.github.io/test/';
+			        });
+				}
+			});
+		}
 
         navBtns.forEach(btn => {
             btn.addEventListener('click', () => {
@@ -632,6 +638,8 @@
                 if (tab === 'home') switchTab('home');
                 else if (tab === 'program') switchTab('program');
                 else if (tab === 'website') switchTab('website');
+
+
             });
         });
 

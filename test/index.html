@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <link rel="preconnect" href="https://eo-img.iloli.love">
+    <link rel="preconnect" href="https://esa-img.iloli.love">
+    <link rel="preconnect" href="https://www.loliapi.com">
+    <link rel="dns-prefetch" href="https://eo-img.iloli.love">
+    <link rel="dns-prefetch" href="https://esa-img.iloli.love">
+    <link rel="dns-prefetch" href="https://www.loliapi.com">
+    
+    <title>TEST - LWIHX</title>
+    <!-- 引入 Font Awesome 图标库 -->
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background-color: #e8edf2;
+            font-family: 'Segoe UI', 'Roboto', 'Noto Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+            padding: 2rem 1.5rem;
+        }
+
+        /* 主容器 */
+        .app-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0);
+            border-radius: 2rem;
+            padding: 1.8rem 2rem;
+            transition: all 3s ease;
+        }
+
+        /* 淡入淡出效果 */
+        .fade-in {
+            animation: fadeInUp 2s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+
+        @keyframes fadeInUp {
+            0% {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 导航栏 */
+        .main-nav {
+            display: flex;
+            justify-content: center;
+            gap: 0.8rem;
+            background: rgba(30, 30, 35, 0.35);
+            border-radius: 60px;
+            padding: 0.4rem;
+            margin-bottom: 2rem;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            padding: 0.6rem 1.8rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #eef2f5;
+            background-color: rgba(35, 35, 45, 0.6);
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .nav-btn:hover {
+            background: rgba(55, 60, 75, 0.8);
+            color: #ffffff;
+        }
+
+        /* 测试面板 */
+        .test-panel {
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 1.5rem;
+            padding: 2rem;
+            border: 1px solid rgba(255,255,255,0.6);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .panel-header {
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .panel-header h2 {
+            color: #000000;
+            font-size: 1.8rem;
+            text-shadow: 0 2px 4px rgba(255,255,255,0.9);
+        }
+
+        .path-hint {
+            color: #4a5568;
+            font-size: 0.85rem;
+            margin-top: 4px;
+        }
+
+        /* 输入框区域 */
+        .input-section {
+            margin-bottom: 2rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #1e2f3e;
+            font-size: 1rem;
+        }
+
+        .input-group label i {
+            margin-right: 0.5rem;
+            color: #667eea;
+        }
+
+        /* 多行输入框 */
+        .input-textarea {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            border-radius: 1rem;
+            font-size: 1rem;
+            font-family: inherit;
+            color: #1e2f3e;
+            transition: all 0.3s;
+            outline: none;
+            resize: vertical;
+            line-height: 1.5;
+        }
+
+        .input-textarea:focus {
+            border-color: #86b7fe;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(134, 183, 254, 0.2);
+        }
+
+        /* 按钮样式 */
+        .btn-submit {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 40px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-block;
+            width: auto;
+            min-width: 150px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-clear {
+            background: rgba(100, 100, 110, 0.6);
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 40px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-left: 1rem;
+        }
+
+        .btn-clear:hover {
+            background: rgba(80, 80, 90, 0.8);
+            transform: translateY(-2px);
+        }
+
+        /* 输出区域 */
+        .output-section {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .output-title {
+            font-weight: 600;
+            color: #1e2f3e;
+            margin-bottom: 0.8rem;
+            font-size: 1.1rem;
+        }
+
+        .output-content {
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 1rem;
+            padding: 1rem;
+            min-height: 100px;
+            color: #2c3e50;
+            line-height: 1.6;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+        }
+
+        .output-content.empty {
+            color: #9ca3af;
+            font-style: italic;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* 响应式 */
+        @media (max-width: 750px) {
+            body { padding: 1rem; }
+            .app-container { padding: 1rem; }
+            .test-panel { padding: 1.2rem; }
+            .nav-btn { padding: 0.4rem 1rem; font-size: 0.9rem; }
+            .main-nav { flex-wrap: wrap; justify-content: center; gap: 0.4rem; }
+            .button-group { flex-direction: column; align-items: center; }
+            .btn-clear { margin-left: 0; margin-top: 0.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container fade-in">
+    <!-- 导航栏 -->
+    <nav class="main-nav">
+        <a href="/" class="nav-btn">返回首页</a>
+        <span class="nav-btn active" style="cursor: default;">TEST</span>
+    </nav>
+
+    <!-- 测试面板 -->
+    <div class="test-panel">
+        <div class="panel-header">
+            <h2>一个普通的输入框</h2>
+            <p class="path-hint">在下方输入框中输入文字，点击提交即可显示</p>
+        </div>
+
+        <!-- 输入区域 -->
+        <div class="input-section">
+            <div class="input-group">
+                <label></i>一个普通的输入框</label>
+                <textarea id="mainInput" class="input-textarea" rows="6" placeholder="可以输入任意内容"></textarea>
+            </div>
+        </div>
+
+        <!-- 按钮区域 -->
+        <div class="button-group">
+            <button id="submitBtn" class="btn-submit">提交</button>
+            <button id="clearBtn" class="btn-clear">清空</button>
+        </div>
+
+        <!-- 输出区域 -->
+        <div class="output-section">
+            <div class="output-title"> 输出内容：</div>
+            <div id="outputContent" class="output-content empty">等待输入...</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // 设置随机背景图片
+        function setRandomBackground() {
+            const imgUrl = `https://www.loliapi.com/acg/pc/?t=${Date.now()}`;
+            const img = new Image();
+            img.onload = function() {
+                document.body.style.backgroundImage = `url('${imgUrl}')`;
+                document.body.style.backgroundSize = 'cover';
+                document.body.style.backgroundPosition = 'center';
+                document.body.style.backgroundRepeat = 'no-repeat';
+                document.body.style.backgroundAttachment = 'fixed';
+            };
+            img.onerror = function() {
+                console.warn('背景图片加载失败');
+                document.body.style.backgroundColor = '#e8edf2';
+            };
+            img.src = imgUrl;
+        }
+
+        // 获取元素
+        const mainInput = document.getElementById('mainInput');
+        const submitBtn = document.getElementById('submitBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const outputContent = document.getElementById('outputContent');
+
+        // 提交按钮点击事件
+        submitBtn.addEventListener('click', () => {
+            const text = mainInput.value;
+            
+            if (text.trim() === '') {
+                outputContent.innerHTML = '还没有输入任何内容';
+                outputContent.classList.remove('empty');
+            } else {
+                // 保留换行符，转换为 HTML 的 <br>
+                const formattedText = text.replace(/\n/g, '<br>');
+                outputContent.innerHTML = formattedText;
+                outputContent.classList.remove('empty');
+            }
+        });
+
+        // 清空按钮点击事件
+        clearBtn.addEventListener('click', () => {
+            mainInput.value = '';
+            outputContent.innerHTML = '等待输入...';
+            outputContent.classList.add('empty');
+            mainInput.focus();
+        });
+
+        // Ctrl+Enter 快捷提交
+        mainInput.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'Enter') {
+                submitBtn.click();
+            }
+        });
+
+        // 初始化背景
+        setRandomBackground();
+    })();
+</script>
+</body>
+</html>
