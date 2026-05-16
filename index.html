@@ -56,12 +56,12 @@
             }
         }
 
-        /* 头部区域 - 只保留标题，移除头像和github链接区域，但保留占位使布局不变，实际不显示 */
+        /* 头部区域 */
         .site-header {
-            display: none;  /* 隐藏整个头部区域，因为要去掉头像和名字及GitHub link */
+            display: none;  /* 隐藏整个头部区域 */
         }
 
-        /* 导航栏 - 横向排列居中 */
+        /* 导航栏 */
         .main-nav {
             display: flex;
             justify-content: center;
@@ -121,9 +121,10 @@
             display: flex;
             flex-wrap: wrap;
             gap: 2rem;
+            align-items: flex-start;
         }
 
-        /* 左侧独立面板 (原个人信息) */
+        /* 左侧面板 */
         .home-left {
             flex: 1;
             min-width: 240px;
@@ -160,7 +161,7 @@
             font-size: 0.95rem;
         }
 
-        /* 右侧 Archive 独立面板，高度自动根据内容调整 */
+        /* 右侧面板，高度根据内容自动调整 */
         .home-right {
             flex: 2;
             background: rgba(255, 255, 255, 0.6);
@@ -168,7 +169,7 @@
             padding: 1.5rem;
             border: 1px solid rgba(255,255,255,0.6);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            height: auto;
+            /* height: auto; */
         }
 
         /* Archive 卡片样式 */
@@ -254,12 +255,12 @@
             text-decoration: underline;
         }
 
-        /* 底部LoliAPI 已移除，不显示 */
+        /* 棍母 */
         .home-footer {
             display: none;
         }
 
-        /* 程序 & 网站共用样式 */
+        /* 程序&网站共用样式 */
         .panel-header {
             margin-bottom: 1.5rem;
         }
@@ -283,7 +284,7 @@
             border: 1px solid rgba(255,255,255,0.5);
         }
 
-        /* 文件列表样式 (三列布局) */
+        /* 文件列表样式 */
         .file-list-header {
             display: flex;
             justify-content: space-between;
@@ -379,7 +380,7 @@
             border-color: rgba(0,0,0,0.05);
         }
 
-        /* 弹窗遮罩层 */
+        /* 弹窗遮罩层（棍母） */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -527,9 +528,7 @@
 <body>
 
 <div class="app-container fade-in">
-    <!-- site-header 已移除，不显示任何头像/名字和github链接 -->
-
-    <!-- 导航栏：横向排列居中 -->
+    <!-- 导航栏 -->
     <nav class="main-nav">
         <button class="nav-btn active" data-tab="home">首页</button>
         <button class="nav-btn" data-tab="program">程序&文件</button>
@@ -539,10 +538,10 @@
     </nav>
 
     <main class="tab-content-wrapper">
-        <!-- 首页面板：两个独立面板（左侧个人信息 / 右侧Archive） -->
+        <!-- 首页面板：个人信息面板+Archive面板 -->
         <div id="homePanel" class="tab-panel active-panel">
             <div class="home-layout">
-                <!-- 左侧独立面板：头像+名字+GitHub链接 -->
+                <!-- 左侧面板 -->
                 <div class="home-left">
                     <div class="home-profile">
                         <img src="./avatar.png" alt="avatar-large" class="home-avatar" onerror="this.src='https://via.placeholder.com/96?text=Avatar'">
@@ -553,26 +552,25 @@
                         </div>
                     </div>
                 </div>
-                <!-- 右侧独立Archive面板，高度自适应内容 -->
+                <!-- 右侧Archive面板 -->
                 <div class="home-right">
                     <div class="archive-card">
                         <div class="archive-header">
                             <span>Archive</span>
                         </div>
                         <div class="archive-content" id="archiveContent">
-                            <div class="loading-placeholder">正在加载 Archive ...</div>
+                            <div class="loading-placeholder">正在加载...</div>
                         </div>
                     </div>
                 </div>
             </div>
-            <!-- 底部LoliAPI链接已移除 -->
         </div>
 
         <!-- 程序&文件面板 -->
         <div id="programPanel" class="tab-panel">
             <div class="panel-header">
                 <h2>Application&File</h2>
-                <p class="path-hint"><strong>如果选择「CDN加速」不要重复下载</strong></p>
+                <p class="path-hint"><strong>尽量不要重复多次下载</strong></p>
             </div>
             <div class="file-list-container" id="programFileList">
             </div>
@@ -591,7 +589,7 @@
     </main>
 </div>
 
-<!-- 关于弹窗 -->
+<!-- ABOUT弹窗 -->
 <div class="modal-overlay" id="aboutModal">
     <div class="modal-container">
         <div class="modal-header">
@@ -637,7 +635,7 @@
             });
         });
 
-        // Archive.md 使用 marked.js
+        // 使用 marked.js 解析 Markdown
         async function loadArchiveMarkdown() {
             const archiveContainer = document.getElementById('archiveContent');
             if (!archiveContainer) return;
@@ -654,7 +652,7 @@
                 }
             } catch (err) {
                 console.warn(err);
-                archiveContainer.innerHTML = `<div class="error-message">❌ 无法加载 Archive.md<br>错误: ${err.message}</div>`;
+                archiveContainer.innerHTML = `<div class="error-message">ERROR：无法加载 Archive.md<br>错误: ${err.message}</div>`;
             }
         }
 
@@ -753,8 +751,8 @@
                 document.body.style.backgroundAttachment = 'fixed';
             };
             img.onerror = function() {
-                console.warn('背景图片加载失败，使用备用图片源');
-                const fallbackUrl = `https://eo-img.iloli.love/i/pc/?t=${Date.now()}`;
+                console.warn('背景图片加载失败');
+                const fallbackUrl = `https://www.loliapi.com/acg/pc/?t=${Date.now()}`;
                 document.body.style.backgroundImage = `url('${fallbackUrl}')`;
                 document.body.style.backgroundSize = 'cover';
                 document.body.style.backgroundPosition = 'center';
@@ -777,7 +775,29 @@
         function closeModal() {
             aboutModal.classList.remove('active');
         }
-
+        
+        let cachedAboutHtml = null; // 缓存变量
+        
+        // 预加载 about.md
+		async function preloadAboutMarkdown() {
+			const aboutUrl = '/about/about.md';
+			try {
+				const response = await fetch(aboutUrl);
+				if (!response.ok) throw new Error(`HTTP ${response.status} - 文件不存在`);
+				const markdownText = await response.text();
+				
+				if (typeof marked !== 'undefined') {
+					cachedAboutHtml = marked.parse(markdownText);
+				} else {
+					cachedAboutHtml = `<pre style="white-space: pre-wrap;">${escapeHtml(markdownText)}</pre>`;
+				}
+				console.log('预加载 about.md 完成');
+			} catch (err) {
+				console.error('预加载 about.md 失败:', err);
+				cachedAboutHtml = null;
+			}
+		}
+        
         async function loadAboutMarkdown() {
             const aboutUrl = '/about/about.md';
             modalBody.innerHTML = '<div class="loading-placeholder">正在加载...</div>';
@@ -795,7 +815,7 @@
                 }
             } catch (err) {
                 console.error('加载 about.md 失败:', err);
-                modalBody.innerHTML = `<div class="error-message">❌ 无法加载 about.md<br>错误: ${err.message}</div>`;
+                modalBody.innerHTML = `<div class="error-message">ERROR：无法加载 about.md<br>错误: ${err.message}</div>`;
             }
         }
 
@@ -821,6 +841,8 @@
             loadWebsitesHardcoded();
             const containerDiv = document.querySelector('.app-container');
             if (containerDiv) containerDiv.classList.add('fade-in');
+            // 预加载 about.md
+			preloadAboutMarkdown();
         }
         
         init();
