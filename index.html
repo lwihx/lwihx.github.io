@@ -250,8 +250,8 @@
         .archive-content code {
             background: rgba(0,0,0,0.08);
             padding: 0.2rem 0.4rem;
-            border-radius: 8px;
-            font-family: monospace;
+            border-radius: 6px;
+            font-family: 'Courier New', 'Fira Code', 'JetBrains Mono', monospace;
             font-size: 0.85rem;
         }
         .archive-content pre {
@@ -260,7 +260,19 @@
             border-radius: 12px;
             overflow-x: auto;
             white-space: pre;
+			word-break: normal;
+			font-family: 'Courier New', 'Fira Code', 'JetBrains Mono', monospace;
+			font-size: 0.85rem;
+			line-height: 1.5;
+			tab-size: 4;
         }
+        /* 代码块内的行内样式保持等宽 */
+		.archive-content pre code {
+			background: transparent;
+			padding: 0;
+			white-space: pre;
+			display: block;
+		}
         .archive-content a {
             color: #3b82f6;
             text-decoration: none;
