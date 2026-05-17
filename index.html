@@ -29,7 +29,7 @@
     <!-- 引入 KaTeX 渲染 LaTeX 公式 -->
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
 	<script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"</script>
+	<script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -626,7 +626,13 @@
             program: document.getElementById('programPanel'),
             website: document.getElementById('websitePanel')
         };
-
+        const testBtn = document.getElementById('testBtn');
+			if (testBtn) {
+			testBtn.addEventListener('click', () => {
+			window.location.href = 'https://lwihx.github.io/test/';
+			});
+		}
+		
         function switchTab(tabId) {
             navBtns.forEach(btn => {
                 const btnTab = btn.getAttribute('data-tab');
@@ -638,12 +644,7 @@
                     if (key === tabId) panels[key].classList.add('active-panel');
                     else panels[key].classList.remove('active-panel');
                 }
-               const testBtn = document.getElementById('testBtn');
-			   if (testBtn) {
-				testBtn.addEventListener('click', () => {
-				window.location.href = 'https://lwihx.github.io/test/';
-			        });
-				}
+
 			});
 		}
 
@@ -671,7 +672,7 @@
 					const htmlContent = marked.parse(markdownText);
 					archiveContainer.innerHTML = htmlContent;
             
-					// 渲染 LaTeX 公式
+					// 手动调用 KaTeX 渲染
 					if (typeof renderMathInElement !== 'undefined') {
 						renderMathInElement(archiveContainer, {
 							delimiters: [
@@ -682,6 +683,22 @@
 							],
 							throwOnError: false
 						});
+					} else {
+						// 如果 renderMathInElement 还没加载，等待一下再试
+						console.log('等待 KaTeX 加载...');
+						setTimeout(() => {
+							if (typeof renderMathInElement !== 'undefined') {
+								renderMathInElement(archiveContainer, {
+									delimiters: [
+										{left: '$$', right: '$$', display: true},
+										{left: '$', right: '$', display: false},
+										{left: '\\\\(', right: '\\\\)', display: false},
+										{left: '\\\\[', right: '\\\\]', display: true}
+									],
+									throwOnError: false
+								});
+							}
+						}, 200);
 					}
 				} else {
 					archiveContainer.innerHTML = `<pre style="white-space: pre-wrap;">${escapeHtml(markdownText)}</pre>`;
