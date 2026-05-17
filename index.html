@@ -668,11 +668,13 @@
 				const response = await fetch(mdUrl);
 				if (!response.ok) throw new Error(`HTTP ${response.status} - 文件不存在`);
 				const markdownText = await response.text();
+        
 				if (typeof marked !== 'undefined') {
-					const htmlContent = marked.parse(markdownText);
+					// marked.parse() 返回 Promise，需要 await
+					const htmlContent = await marked.parse(markdownText);
 					archiveContainer.innerHTML = htmlContent;
             
-					// 手动调用 KaTeX 渲染
+					// KaTeX 渲染
 					if (typeof renderMathInElement !== 'undefined') {
 						renderMathInElement(archiveContainer, {
 							delimiters: [
@@ -683,25 +685,9 @@
 							],
 							throwOnError: false
 						});
-					} else {
-						// 如果 renderMathInElement 还没加载，等待一下再试
-						console.log('等待 KaTeX 加载...');
-						setTimeout(() => {
-							if (typeof renderMathInElement !== 'undefined') {
-								renderMathInElement(archiveContainer, {
-									delimiters: [
-										{left: '$$', right: '$$', display: true},
-										{left: '$', right: '$', display: false},
-										{left: '\\\\(', right: '\\\\)', display: false},
-										{left: '\\\\[', right: '\\\\]', display: true}
-									],
-									throwOnError: false
-								});
-							}
-						}, 200);
 					}
 				} else {
-					archiveContainer.innerHTML = `<pre style="white-space: pre-wrap;">${escapeHtml(markdownText)}</pre>`;
+					archiveContainer.innerHTML = `<pre>${escapeHtml(markdownText)}</pre>`;
 				}
 			} catch (err) {
 				console.warn(err);
@@ -861,7 +847,7 @@
                 const markdownText = await response.text();
                 
                 if (typeof marked !== 'undefined') {
-                    const htmlContent = marked.parse(markdownText);
+                    const htmlContent = await marked.parse(markdownText);
                     modalBody.innerHTML = htmlContent;
                 } else {
                     modalBody.innerHTML = `<pre style="white-space: pre-wrap;">${escapeHtml(markdownText)}</pre>`;
