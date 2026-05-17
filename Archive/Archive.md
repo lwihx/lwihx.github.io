@@ -16,7 +16,7 @@ a, b = 3, 7
 a = a ^ b
 b = a ^ b
 a = a ^ b
- print(a, b)   # 输出7, 3
+print(a, b)   # 输出7, 3
 ```
 ---
 # <center>模运算</center>
