@@ -11,13 +11,12 @@
 - 如果 `a ^ b = 0` , 那么 `a = b`
 ---
 ## 不用临时变量交换两个数
-```Python
+```python
 a, b = 3, 7
 a = a ^ b
 b = a ^ b
 a = a ^ b
-print(a, b)   # 输出7, 3
-
+print(a, b)   # 输出 7, 3
 ```
 ---
 # <center>模运算</center>
