@@ -13,10 +13,10 @@
 ## 不用临时变量交换两个数(Python)
 ```
 a, b = 3, 7
- a = a ^ b
- b = a ^ b
- a = a ^ b
- print(a, b)   # 输出7, 3
+a = a ^ b
+b = a ^ b
+a = a ^ b
+print(a, b)   # 输出7, 3
 ```
 ---
 # <center>模运算</center>
