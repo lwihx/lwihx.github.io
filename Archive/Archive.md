@@ -1,8 +1,36 @@
-# 常用HTML代码
+# <center>XOR(异或)运算</center>
+- 一种二进制逻辑运算，运算符为 **`$\oplus$`** 或 **`^`**
+- 核心规则：`相同为 0，不同为 1`
+---
+## 性质
+- 与自身异或则为0：`x ^ x = 0`
+- 与0异或则不变：`x ^ 0 = x`
+- 适用交换律及结合律：`a ^ b = b ^ a` , `(a ^ b) ^ c = a ^ (b ^ c)`
+- 自反性：`a ^ b ^ b = a`
+- 与1异或则按位取反：`a ^ 1 = ¬a`
+- 如果 `a ^ b = 0` , 那么 `a = b`
+---
+## 不用临时变量交换两个数
+```python
+a, b = 3, 7
+a = a ^ b
+b = a ^ b
+a = a ^ b
+print(a, b)   # 输出7, 3
+```
+---
+# <center>模运算</center>
+- 定义：$a \bmod m = r$，其中 $r$ 是 $a$ 除以 $m$ 的余数，$0 \le r < m$
+- 同余式：$a \equiv b \pmod{m}$ 表示 $m \mid (a - b)$
+- 加法：$(a + b) \bmod m = [(a \bmod m) + (b \bmod m)] \bmod m$
+- 减法：$(a - b) \bmod m = [(a \bmod m) - (b \bmod m)] \bmod m$
+- 乘法：$(a \times b) \bmod m = [(a \bmod m) \times (b \bmod m)] \bmod m$
+- 模逆元：若 $\gcd(a, m) = 1$，存在 $x$ 使 $a \times x \equiv 1 \pmod{m}$，记 $x \equiv a^{-1} \pmod{m}$
+- 除法（乘逆元）：$a / b \equiv a \times b^{-1} \pmod{m}$（需 $\gcd(b, m) = 1$）
 
-- 通过 `<img src="https://manosaba-test.asachiri.com/assets/characters/Nanoka.png" alt="description">` 加载图片，示例Nanoka.png.
-- 通过 `<iframe src="https://bilibili.com" width="800" height="600"></iframe>` 内嵌网页，示例BiliBili
-- 修改bilibili(空间主页) `<div data-v-f6481511="" class="space-follow-btn gray" bis_skin_checked="1"><i data-v-f6481511="" class="vui_icon sic-BDC-menu_line space-follow-btn-icon" style="font-variation-settings: &quot;strk&quot; 3; font-size: 16px;"></i> 已互关</div>` 显示互关<br>
+---
 
-# XOR运算
-- 核心规则 `相同为 0，不同为 1`
+<div style="display: flex; justify-content: space-between;">
+  <span>2026.5.17</span>
+  <span>lwihx</span>
+</div>
