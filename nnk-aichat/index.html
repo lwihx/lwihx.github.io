@@ -299,12 +299,12 @@
 
     <!-- 模型选择器 -->
     <div class="model-selector">
-        <span>🤖 选择模型：</span>
+        <span> 选择模型：</span>
         <select id="modelSelect">
             <option value="glm-4.7-flash">GLM-4.7-Flash（效果好，有时要排队）</option>
             <option value="glm-4-flash-250414">GLM-4-Flash-250414（备用）</option>
             <option value="glm-4-flash">GLM-4-Flash（老模型，备用）</option>
-            <option value="glm-4.5-air">GLM-4.5-Air（效果较好，有时要排队）</option>
+            
         </select>
         <span id="modelDesc" class="model-desc"></span>
     </div>
@@ -531,10 +531,6 @@ async function sendToAI(message) {
         const data = await response.json();
         
         let reply = data.choices?.[0]?.message?.content || '';
-        
-        if (!reply && data.choices?.[0]?.message?.reasoning_content) {
-            reply = data.choices[0].message.reasoning_content;
-        }
         
         if (!reply) {
             reply = '（没有生成内容，请重试）';
