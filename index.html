@@ -560,6 +560,7 @@
         <button class="nav-btn" data-tab="program">程序&文件</button>
         <button class="nav-btn" data-tab="website">网站</button>
         <button class="nav-btn" id="testBtn">TEST</button>
+        <button class="nav-btn" id="aiNnkBtn">NNK-AICHAT</button>
         <button class="nav-btn" id="aboutBtn">关于</button>
     </nav>
 
@@ -641,6 +642,13 @@
 			if (testBtn) {
 			testBtn.addEventListener('click', () => {
 			window.location.href = 'https://lwihx.github.io/test/';
+			});
+		}
+		
+		const aiNnkBtn = document.getElementById('aiNnkBtn');
+		if (aiNnkBtn) {
+			aiNnkBtn.addEventListener('click', () => {
+			window.location.href = 'https://lwihx.github.io/nnk-aichat/';
 			});
 		}
 		
